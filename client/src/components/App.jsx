@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import  { useContext, useState } from 'react';
 import '../App.css';
 import SignInPage from '../pages/SignUpPage';
 import Marketplace from '../pages/Marketplace';

@@ -1,6 +1,5 @@
-# User Relationships
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, CheckConstraint
 from datetime import datetime
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
@@ -10,7 +9,7 @@ metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
 })
 
-db = SQLAlchemy()
+db = SQLAlchemy(metadata=metadata)
 
 class Users(db.Model, SerializerMixin):
     __tablename__ = 'users'
@@ -18,27 +17,12 @@ class Users(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
-    username = db.Column(db.String(100), 
-                         unique=True, 
-                         nullable=False)
-    @validates('username')
-    # The username can only be numbers or letters
-    def validate_username(self, key, username):
-        if not username.isalnum():
-            raise AssertionError('The username can only contain numbers or letters')
-
-        return username
+    username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
-    @validates('email')
-    # Email address must have the first name and last name and end with @student.com . Example: michael.thomas@student.com
-    def validate_email(self, key, email):
-        if not email.endswith('@student.com'):
-            raise AssertionError('Wrong email format')
-        return email
     password = db.Column(db.String(255), nullable=False)
     phone_no = db.Column(db.String(20), nullable=True)
     category = db.Column(db.String(100), nullable=False)
-    image_url = db.Column(db.String(500))
+    image_data = db.Column(db.LargeBinary(length=16277215))
     gender = db.Column(db.String(50))
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -49,7 +33,18 @@ class Users(db.Model, SerializerMixin):
     comments_on_fun_times = db.relationship('Comment_fun_times', backref='user', lazy=True)
     products = db.relationship('Products', backref='user', lazy=True)
     reviews = db.relationship('Reviews', backref='user', lazy=True)
+    
+    @validates('username')
+    def validate_username(self, key, username):
+        if not username.isalnum():
+            raise AssertionError('The username can only contain numbers or letters')
+        return username
 
+    @validates('email')
+    def validate_email(self, key, email):
+        if not email.endswith('@student.com'):
+            raise AssertionError('Wrong email format')
+        return email
 
 class Events(db.Model, SerializerMixin):
     __tablename__ = 'events'
@@ -57,17 +52,16 @@ class Events(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255))
     description = db.Column(db.String(255))
-    image_url = db.Column(db.String(255))
+    image_data = db.Column(db.LargeBinary(length=16277215))
     start_time = db.Column(db.DateTime)
     end_time = db.Column(db.DateTime)
     date_of_event = db.Column(db.DateTime)
-    Entry_fee = db.Column(db.String)
+    entry_fee = db.Column(db.String)
     category = db.Column(db.String(50))
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     comments = db.relationship('Comment_events', backref='event', lazy=True)
-    
     
 class Products(db.Model, SerializerMixin):
     __tablename__ = 'products'
@@ -75,7 +69,7 @@ class Products(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255))
     description = db.Column(db.String(255))
-    image_url = db.Column(db.String(255))
+    image_data = db.Column(db.LargeBinary(length=16277215))
     contact_info = db.Column(db.String(20), nullable=True)
     price = db.Column(db.Integer)
     category = db.Column(db.String(50))
@@ -84,24 +78,12 @@ class Products(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     reviews = db.relationship('Reviews', backref='product', lazy=True)
 
-class Wishlists(db.Model, SerializerMixin):
-    __tablename__ = 'wishlists'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    user = db.relationship('Users', backref='wishlists_items', lazy=True)
-    product = db.relationship('Products', backref='wishlists_items', lazy=True)
-
 class Fun_times(db.Model, SerializerMixin):
     __tablename__ = 'fun_times'
     
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(255))
-    image_url = db.Column(db.String(255))
+    image_data = db.Column(db.LargeBinary(length=16277215))
     category = db.Column(db.String(50))
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -146,6 +128,18 @@ class Reviews(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
+
+class Wishlists(db.Model, SerializerMixin):
+    __tablename__ = 'wishlists'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = db.relationship('Users', backref='wishlists_items', lazy=True)
+    product = db.relationship('Products', backref='wishlists_items', lazy=True)
 
 # Serialization rules
 Users.serialize_rules = (
@@ -198,7 +192,7 @@ Wishlists.serialize_rules = (
     'user.last_name', 
     'user.email',
     'user.phone_no',
-    'user.image_url',
+    'user.image_data',
     'product.id',
     'product.title',      
     'product.description',
