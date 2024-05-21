@@ -9,7 +9,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from models import db, Users, Events, Fun_times, Products, Likes, Comment_events, Comment_fun_times, Reviews, Wishlists
 from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from views import *
 
 import bcrypt
 
@@ -25,6 +25,12 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Set maximum content lengt
 db.init_app(app)
 migrate = Migrate(app, db)
 CORS(app)
+
+app.register_blueprint(user_bp)
+app.register_blueprint(marketplace_bp)
+app.register_blueprint(event_bp)
+app.register_blueprint(funtime_bp)
+app.register_blueprint(auth_bp)
 jwt = JWTManager(app)
 
 @app.route('/')
