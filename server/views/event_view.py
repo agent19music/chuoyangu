@@ -1,9 +1,10 @@
-from models import db, Users,Events, Comment_events
+from models import db, Users, Events, Comment_events
 from flask import request, jsonify, Blueprint
 from werkzeug.security import generate_password_hash
-from flask_jwt_extended import  jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import or_, func
 from datetime import datetime
+import base64
 
 event_bp = Blueprint('event_bp', __name__)
 
@@ -14,21 +15,20 @@ def get_events():
         'eventId': event.id, 
         'title': event.title, 
         'description': event.description, 
-        'poster': event.image_url,
+        'poster': event.image_data,
         'start_time': event.start_time, 
         'end_time': event.end_time, 
         'date': event.date_of_event.strftime('%d %b %Y'),
         'entry_fee': event.Entry_fee,
         'category': event.category,
-        'comments':[{
+        'comments': [{
             'id': comment.id,
             'text': comment.text, 
-            'image': comment.user.image_url,
+            'image': comment.user.image_data,
             'username': comment.user.username,
             'dateCreated': comment.created_at  
         } for comment in event.comments]
-
-        } for event in events]
+    } for event in events]
     return jsonify({'events': output})
 
 @event_bp.route('/events/<int:event_id>', methods=['GET'])
@@ -40,7 +40,7 @@ def get_specific_event(event_id):
     output = {
         'eventId': event.id, 
         'title': event.title, 
-        'poster': event.image_url,
+        'poster': event.image_data,
         'description': event.description, 
         'start_time': event.start_time, 
         'end_time': event.end_time, 
@@ -50,7 +50,7 @@ def get_specific_event(event_id):
         'comments': [{
             'id': comment.id,
             'text': comment.text, 
-            'image': comment.user.image_url,
+            'image': comment.user.image_data,
             'username': comment.user.username, 
             'dateCreated': comment.created_at 
         } for comment in event.comments]
@@ -73,15 +73,20 @@ def add_event():
     start_datetime = datetime.combine(date_of_event, start_time)
     end_datetime = datetime.combine(date_of_event, end_time)
 
+    # Decode the image data from base64 if needed
+    image_data = data.get('image_data')
+    if image_data:
+        image_data = base64.b64decode(image_data)
+
     new_event = Events(
         title=data['title'],
         description=data['description'],
         start_time=start_datetime,
         end_time=end_datetime,
         date_of_event=date_of_event,
-        Entry_fee = data['Entry_fee'],
+        Entry_fee=data['Entry_fee'],
         category=data['category'],
-        image_url=data.get('image_url'),
+        image_data=image_data,
         user_id=current_user
     )
     db.session.add(new_event)
@@ -117,14 +122,16 @@ def update_event(event_id):
     if 'date_of_event' in data and 'end_time' in data:
         event.end_time = datetime.combine(event.date_of_event, end_time)
 
-    
-
     # Update other fields
     event.title = data.get('title', event.title)
     event.description = data.get('description', event.description)
-    event.image_url = data.get('image_url', event.image_url)
     event.category = data.get('category', event.category)
     event.Entry_fee = data.get('Entry_fee', event.Entry_fee)
+
+    # Decode and update the image data from base64 if provided
+    image_data = data.get('image_data')
+    if image_data:
+        event.image_data = base64.b64decode(image_data)
 
     db.session.commit()
     return jsonify({'message': 'Event updated successfully'})
@@ -189,9 +196,6 @@ def update_comment_event(comment_id):
     
     return jsonify({'message': 'Comment updated successfully'})
 
-
-
-
 @event_bp.route('/delete-comment-event/<int:comment_id>', methods=['DELETE'])
 @jwt_required()
 def delete_comment(comment_id):
@@ -208,4 +212,3 @@ def delete_comment(comment_id):
     db.session.commit()
     
     return jsonify({'message': 'Comment deleted successfully'})
-

@@ -1,7 +1,7 @@
-from models import db, Likes,Fun_times, Comment_fun_times
+from models import db, Likes, Fun_times, Comment_fun_times
 from flask import request, jsonify, Blueprint
 from werkzeug.security import generate_password_hash
-from flask_jwt_extended import  jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import or_, func
 from datetime import datetime
 
@@ -15,16 +15,16 @@ def get_fun_times():
     for fun_time in fun_times:
         total_likes = db.session.query(func.count(Likes.id)).filter(Likes.fun_time_id == fun_time.id).scalar()
         fun_time_data = {
-            'funtimeId': fun_time.id, 
-            'description': fun_time.description, 
-            'image_url': fun_time.image_url, 
+            'funtimeId': fun_time.id,
+            'description': fun_time.description,
+            'image_data': fun_time.image_data,
             'category': fun_time.category,
             'total_likes': total_likes,
             'comments': [{
                 'id': comment.id,
-                'text': comment.text,  
-                'username': comment.user.username ,
-                'image': comment.user.image_url , 
+                'text': comment.text,
+                'username': comment.user.username,
+                'image': comment.user.image_url,
                 'dateCreated': comment.created_at,
                 'updated_at': comment.updated_at
             } for comment in fun_time.comments]
@@ -45,7 +45,7 @@ def get_user_fun_times():
         fun_time_data = {
             'funtimeId': fun_time.id,
             'description': fun_time.description,
-            'image_url': fun_time.image_url,
+            'image_data': fun_time.image_data,
             'category': fun_time.category,
             'total_likes': total_likes,
             'comments': [{
@@ -59,13 +59,17 @@ def get_user_fun_times():
 
     return jsonify({'user_fun_times': output})
 
-
 @funtime_bp.route('/add-fun_time', methods=['POST'])
 @jwt_required()
 def add_fun_time():
     current_user = get_jwt_identity()
     data = request.get_json()
-    new_fun_time = Fun_times(description=data['description'], image_url=data['image_url'], category=data['category'], user_id=current_user)
+    new_fun_time = Fun_times(
+        description=data['description'],
+        image_data=data['image_data'],
+        category=data['category'],
+        user_id=current_user
+    )
     db.session.add(new_fun_time)
     db.session.commit()
     return jsonify({'message': 'New Fun-Time created!'})
@@ -80,7 +84,7 @@ def update_fun_time(fun_time_id):
     data = request.get_json()
     fun_time.description = data.get('description', fun_time.description)
     fun_time.category = data.get('category', fun_time.category)
-    fun_time.image_url = data.get('image_url', fun_time.image_url)
+    fun_time.image_data = data.get('image_data', fun_time.image_data)
     db.session.commit()
     return jsonify({'message': 'Fun-Time updated successfully'})
 
@@ -113,7 +117,7 @@ def most_liked_fun_time():
             'id': fun_time.id,
             'description': fun_time.description,
             'category': fun_time.category,
-            'image_url': fun_time.image_url,
+            'image_data': fun_time.image_data,
             'like_count': like_count
         }
     })
@@ -144,7 +148,6 @@ def comment_fun_time(fun_time_id):
     
     return jsonify({'message': 'Comment added successfully'})
 
-
 @funtime_bp.route('/update-comment-fun_time/<int:comment_id>', methods=['PUT'])
 @jwt_required()
 def update_comment_fun_time(comment_id):
@@ -167,7 +170,6 @@ def update_comment_fun_time(comment_id):
     db.session.commit()
     
     return jsonify({'message': 'Comment updated successfully'})
-
 
 @funtime_bp.route('/delete-comment-fun_time/<int:comment_id>', methods=['DELETE'])
 @jwt_required()
@@ -208,7 +210,6 @@ def toggle_like_fun_time(fun_time_id):
         db.session.commit()
         return jsonify({'message': 'Fun-Time liked successfully'})
 
-
 def get_fun_times_by_category(category):
     fun_times = Fun_times.query.filter_by(category=category).all()
     
@@ -216,16 +217,15 @@ def get_fun_times_by_category(category):
     for fun_time in fun_times:
         total_likes = db.session.query(func.count(Likes.id)).filter(Likes.fun_time_id == fun_time.id).scalar()
         fun_time_data = {
-            'id': fun_time.id, 
-            'description': fun_time.description, 
-            'image_url': fun_time.image_url, 
+            'id': fun_time.id,
+            'description': fun_time.description,
+            'image_data': fun_time.image_data,
             'category': fun_time.category,
             'total_likes': total_likes,
-           
             'comments': [{
                 'id': comment.id,
-                'text': comment.text,  
-                'username': comment.user.username    
+                'text': comment.text,
+                'username': comment.user.username
             } for comment in fun_time.comments]
         }
         output.append(fun_time_data)
@@ -241,16 +241,16 @@ def get_latest_fun_times():
     for fun_time in latest_fun_times:
         total_likes = db.session.query(func.count(Likes.id)).filter(Likes.fun_time_id == fun_time.id).scalar()
         fun_time_data = {
-            'id': fun_time.id, 
-            'description': fun_time.description, 
-            'image_url': fun_time.image_url, 
+            'id': fun_time.id,
+            'description': fun_time.description,
+            'image_data': fun_time.image_data,
             'category': fun_time.category,
             'created_at': fun_time.created_at,
             'total_likes': total_likes,
             'comments': [{
                 'id': comment.id,
-                'text': comment.text,  
-                'username': comment.user.username    
+                'text': comment.text,
+                'username': comment.user.username
             } for comment in fun_time.comments]
         }
         output.append(fun_time_data)
