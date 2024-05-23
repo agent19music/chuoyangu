@@ -13,7 +13,6 @@ db = SQLAlchemy(metadata=metadata)
 
 class Users(db.Model, SerializerMixin):
     __tablename__ = 'users'
-    
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
@@ -140,6 +139,13 @@ class Wishlists(db.Model, SerializerMixin):
 
     user = db.relationship('Users', backref='wishlists_items', lazy=True)
     product = db.relationship('Products', backref='wishlists_items', lazy=True)
+
+class TokenBlocklist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    jti =  db.Column(db.String(100),nullable=True)
+    created_at = db.Column(db.DateTime(), default=datetime.utcnow)
+
+
 
 # Serialization rules
 Users.serialize_rules = (
