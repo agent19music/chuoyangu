@@ -1,4 +1,3 @@
-import React from 'react';
 import SideMenu from '../components/SideMenu.jsx';
 import { Link } from 'react-router-dom';
 import EducationalEvent from '../components/EducationalEvents.jsx';
@@ -21,10 +20,10 @@ export default function EducationalEventsPage() {
             <i className="fas fa-book-open fa-fw me-3"></i><span>Educational Events</span>
           </Link>
           <Link to="/events/fun" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
-          <i class="far fa-face-smile-beam fa-fw me-3"></i><span>Fun Events</span>
+          <i className="far fa-face-smile-beam fa-fw me-3"></i><span>Fun Events</span>
           </Link>
           <Link to="/events/social" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
-          <i class="fas fa-user-group fa-fw me-3"></i><span>Social Events</span>
+          <i className="fas fa-user-group fa-fw me-3"></i><span>Social Events</span>
           </Link>
                 </div>
               </div>
@@ -57,11 +56,13 @@ export default function EducationalEventsPage() {
                 <img src='https://blog.lyricallemonade.com/wp-content/uploads/2022/04/IMG_5074-scaled-1.jpg' alt='img' className='img-fluid'/>
                 <h5>Description</h5>
                 <p>
-                In 2023, Bennett began releasing tracks from his debut studio album, titled All Is Yellow (2024). T
-                he lead single from the album, "Doomsday", with Juice Wrld and Cordae, was released on June 23, 2023
-                 and reached number 58 on the Billboard Hot 100, 49 on the Canadian Hot 100, 83 on the Irish Singles
-                  Chart, and 92 on the UK Singles Chart. The album's second single, "Guitar in My Room", with Lil Durk 
-                  and Kid Cudi, was released on September 29. The third single .</p>
+    In 2023, Bennett began releasing tracks from his debut studio album, titled All Is Yellow (2024). 
+    The lead single from the album, &quot;Doomsday&quot;, featuring Juice Wrld and Cordae, was released on June 23, 2023, 
+    and reached number 58 on the Billboard Hot 100, 49 on the Canadian Hot 100, 83 on the Irish Singles Chart, 
+    and 92 on the UK Singles Chart. The album&apos;s second single, &quot;Guitar in My Room&quot;, featuring Lil Durk 
+    and Kid Cudi, was released on September 29. The third single has yet to be announced.
+</p>
+
         
               </div>
               <div className='sidebar-btn'>
@@ -69,6 +70,6 @@ export default function EducationalEventsPage() {
               </div>
             </div>
           );
-        };
+        }
         
         
