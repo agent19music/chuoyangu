@@ -33,7 +33,7 @@ const [onchange, setOnchange] = useState(false)
     if(localCommentText !== ''){
       sendComment(localCommentText, eventId)
     }
-  };
+  }
 
   function sendComment(commentText, eventId){
     fetch(`${apiEndpoint}/comment-event/${eventId}`, {

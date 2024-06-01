@@ -1,4 +1,3 @@
-import React from 'react';
 import SideMenu from '../components/SideMenu.jsx';
 import { Link } from 'react-router-dom';
 import FunEvents from '../components/FunEvents.jsx';
@@ -21,10 +20,10 @@ const FunEventsPage = () => {
             <i className="fas fa-book-open fa-fw me-3"></i><span>Educational Events</span>
           </Link>
           <Link to="/events/fun" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
-          <i class="far fa-face-smile-beam fa-fw me-3"></i><span>Fun Events</span>
+          <i className="far fa-face-smile-beam fa-fw me-3"></i><span>Fun Events</span>
           </Link>
           <Link to="/events/social" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
-          <i class="fas fa-user-group fa-fw me-3"></i><span>Social Events</span>
+          <i className="fas fa-user-group fa-fw me-3"></i><span>Social Events</span>
           </Link>
         </div>
       </div>
