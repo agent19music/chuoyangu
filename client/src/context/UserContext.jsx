@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
+import PropTypes from 'prop-types';
 
 export const UserContext = createContext()
 
@@ -120,5 +121,10 @@ export default function UserProvider({ children }) {
 
   return (
     <UserContext.Provider value={contextData}>{children}</UserContext.Provider>
-  )
+  );
 }
+
+// Add prop type validation
+UserProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

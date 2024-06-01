@@ -39,6 +39,7 @@ import AddFunTime from '../pages/AddFuntimes';
 import MyProductsPage from '../pages/MyProductsPage';
 import UpdateFuntime from '../pages/UpdateFuntimes';
 import EducationalFuntimesPage from '../pages/EducationalFuntimesPages';
+import MarketplaceProvider from '../context/MarketplaceContext';
 
 
 function App() {
@@ -50,7 +51,8 @@ function App() {
 
   return (
     <BrowserRouter>
-   
+
+   <MarketplaceProvider>
     <UserProvider>
       <div className={darkMode ? 'dark-mode' : 'light-mode'}>
         <Routes>
@@ -61,6 +63,7 @@ function App() {
         </Routes>
       </div>
     </UserProvider>
+    </MarketplaceProvider>
    
     </BrowserRouter>
   );
