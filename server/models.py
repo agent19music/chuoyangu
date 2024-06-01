@@ -21,7 +21,7 @@ class Users(db.Model, SerializerMixin):
     password = db.Column(db.String(255), nullable=False)
     phone_no = db.Column(db.String(20), nullable=True)
     category = db.Column(db.String(100), nullable=False)
-    image_data = db.Column(db.LargeBinary(length=16277215))
+    image_data = db.Column(db.LargeBinary(length=16277215), nullable = True)
     gender = db.Column(db.String(50))
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)

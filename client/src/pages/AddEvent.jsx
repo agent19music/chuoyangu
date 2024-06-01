@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom';
 
 export default function AddEvent() {
   const navigate = useNavigate()
-  const {authToken, currentUser, apiEndpoint} = useContext(UserContext);
-  let userId = currentUser.id;
+  const {authToken,  apiEndpoint} = useContext(UserContext);
+
+  console.log(authToken);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [startDateTime, setStartDateTime] = useState('');
@@ -14,7 +15,7 @@ export default function AddEvent() {
   const [dateOfEvent, setDateOfEvent] = useState('');
   const [entryFee, setEntryFee] = useState('');
   const [category, setCategory] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState(null);
 
   const getTimestamp = (time) => {
     // Split the time input into hours and minutes
@@ -45,13 +46,7 @@ export default function AddEvent() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({
-          ...formData, // Use the form data directly
-          date_of_event: formatDate(formData.date_of_event),
-          start_time: getTimestamp(formData.start_time),
-          end_time: getTimestamp(formData.end_time),
-          user_id: userId,
-        }),
+        body: formData,
       });
       if (response.ok) {
         Swal.fire({
@@ -67,7 +62,7 @@ export default function AddEvent() {
         setDateOfEvent('');
         setEntryFee('');
         setCategory('');
-        setImageUrl('');
+        setImageFile(null);
         navigate('/myprofile/myevents')
       }
     } catch (error) {
@@ -80,7 +75,7 @@ export default function AddEvent() {
     event.preventDefault(); // Prevent the default form submission behavior
   
     // Check if any required field is empty
-    if (!title || !description || !startDateTime || !endDateTime || !dateOfEvent || !entryFee || !category || !imageUrl) {
+    if (!title || !description || !startDateTime || !endDateTime || !dateOfEvent || !entryFee || !category || !imageFile) {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -89,23 +84,36 @@ export default function AddEvent() {
       return;
     }
   
+    // Format date and time values
+    const formattedStartDateTime = getTimestamp(startDateTime);
+    const formattedEndDateTime = getTimestamp(endDateTime);
+    const formattedDateOfEvent = formatDate(dateOfEvent);
+  
+    // Create FormData object and append form data
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('start_time', formattedStartDateTime);
+    formData.append('end_time', formattedEndDateTime);
+    formData.append('date_of_event', formattedDateOfEvent);
+    formData.append('entry_fee', entryFee);
+    formData.append('category', category);
+    formData.append('image_data', imageFile);
+  
+    // Log formData before sending
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+  
     // Call addEvent function with the form data
-    await addEvent({
-      title,
-      description,
-      start_time: startDateTime,
-      end_time: endDateTime,
-      date_of_event: dateOfEvent,
-      Entry_fee: entryFee,
-      category,
-      image_url: imageUrl,
-    });
+    await addEvent(formData);
   };
-
+  
+  
   return (
     <div id='form' className="container py-5">
       <h1 className="text-center mb-4">Add Event</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}  encType="multipart/form-data">
         <div className="row g-4">
           <div className="col-md-6">
             <div className="form-floating mb-3">
@@ -195,20 +203,18 @@ export default function AddEvent() {
             </div>
           </div>
           <div className="col-md-6">
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                id="imageUrl"
-                className="form-control"
-                placeholder="Enter image URL"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-              />
-              <label htmlFor="imageUrl" className="text-muted">
-                Poster URL:
-              </label>
-            </div>
+          <div className="form-floating mb-3">
+            <input
+              type="file"
+              id="imageFile"
+              className="form-control"
+              onChange={(e) => setImageFile(e.target.files[0])} // Change this line
+            />
+            <label htmlFor="imageFile" className="text-muted">
+              Poster File:
+            </label>
           </div>
+        </div>
           <div className="col-md-6">
             <div className="form-floating mb-3">
               <select
