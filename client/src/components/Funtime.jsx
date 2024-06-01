@@ -1,32 +1,19 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import  { useState, useContext, useEffect } from 'react';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserContext } from '../context/UserContext';
 import Swal from 'sweetalert2';
 import Comment from './Comment';
+import { FuntimeContext } from '../context/FuntimeContext';
 
 export default function Funtime() {
-  const [funtimes, setFuntimes] = useState([]);
 
   const {authToken, currentUser, apiEndpoint} = useContext(UserContext)
-  const [isLoading, setIsLoading] = useState(false);
-  const [onchange, setOnchange] = useState(false);
+  const {funtimes, setOnchange, setFuntimes, isLoading} = useContext(FuntimeContext)
+  
   // let userId = currentUser.id;
  
 
-  useEffect(() => {
-    setIsLoading(true);
-    fetch(`${apiEndpoint}/fun_times`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('Data from fetch:', data.fun_times);
-        setFuntimes(data.fun_times);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-        setIsLoading(false);
-      });
-  }, [onchange, apiEndpoint]);
+  
 
   const handleLike = async (funtimeId) => {
     try {
@@ -108,7 +95,7 @@ export default function Funtime() {
     if(localCommentText !== ''){
       sendComment(localCommentText, funtimeId)
     }
-  };
+  }
 
   function sendComment(localCommentText, funtimeId){
     fetch(`${apiEndpoint}/comment-fun_time/${funtimeId}`, {
@@ -204,7 +191,7 @@ const EventCard = ({ index, image_url, description, total_likes, category, usern
                     border: 'none'
                   }}
                 >
-                 <i class="fas fa-arrow-up"></i>
+                 <i className="fas fa-arrow-up"></i>
                 </button>
               </div>
 
