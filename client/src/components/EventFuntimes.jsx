@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import  { useState, useContext, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserContext } from '../context/UserContext';
 import Swal from 'sweetalert2';
@@ -196,7 +196,7 @@ const EventCard = ({ index, image_url, description, total_likes, category, usern
                     border: 'none'
                   }}
                 >
-                 <i class="fas fa-arrow-up"></i>
+                 <i className="fas fa-arrow-up"></i>
                 </button>
               </div>
 

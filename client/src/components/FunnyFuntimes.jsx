@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import  { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
 import Swal from 'sweetalert2';
 import Comment from './Comment';
@@ -27,56 +27,6 @@ export default function FunnyFuntimes() {
       });
   }, [onchange, apiEndpoint]);
 
-  // const handleLike = async (funtimeId) => {
-  //   try {
-  //     const response = await fetch(`${apiEndpoint}/toggle-like-fun_time/${funtimeId}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Bearer ${authToken && authToken}`,
-  //       },
-  //     });
-  
-  //     if (!response.ok) {
-  //       throw new Error('Failed to toggle like');
-  //     }
-  
-  //     const data = await response.json();
-  //     console.log(data);
-  
-  //     setFuntimes((prevFuntimes) => {
-  //       return prevFuntimes.map((funTime) => {
-  //         if (funTime.id === funtimeId) {
-  //           return {
-  //             ...funTime,
-  //             total_likes: data.like_count,
-  //             liked: !funTime.liked,
-  //           };
-  //         }
-  //         return funTime;
-  //       });
-  //     });
-  
-  //   } catch (error) {
-  //     console.error('Error toggling like:', error.message);
-  //     Swal.fire({
-  //       icon: 'error',
-  //       text: 'A network error occurred: ' + error.message,
-  //     });
-  //   }
-  // };
-  
-  // // Use useEffect to show the success message after funtimes state updates
-  // useEffect(() => {
-  //   Swal.fire({
-  //     position: 'center',
-  //     icon: 'success',
-  //     title: 'Like count has been updated.',
-  //     showConfirmButton: false,
-  //     timer: 1500,
-  //   });
-  // }, [funtimes]);
-  
   
 
   const handleLike = (index) => {
@@ -208,7 +158,7 @@ const EventCard = ({ index, image_url, description, total_likes, category, usern
                     border: 'none'
                   }}
                 >
-                 <i class="fas fa-arrow-up"></i>
+                 <i className="fas fa-arrow-up"></i>
                 </button>
               </div>
 
