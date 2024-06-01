@@ -13,20 +13,7 @@ export default function EventFuntimes() {
   // let userId = currentUser.id;
  
 
-  useEffect(() => {
-    setIsLoading(true);
-    fetch(`${apiEndpoint}/fun_times/events`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('Data from fetch:', data.fun_times);
-        setFuntimes(data.fun_times);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-        setIsLoading(false);
-      });
-  }, [onchange, apiEndpoint]);
+  
 
   // const handleLike = async (funtimeId) => {
   //   try {

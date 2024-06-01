@@ -1,29 +1,16 @@
-import React,{useState, useEffect, useContext} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import '../App.css';
 import Comment from './Comment'; 
 import Swal from 'sweetalert2';
 import { UserContext } from '../context/UserContext';
+import { EventContext } from '../context/EventContext';
 
 const Event = () => {
 const {authToken, apiEndpoint} = useContext(UserContext)
-const [isLoading, setIsLoading] = useState(false)
-const [events, setEvents] = useState([])
+const {events, isLoading} = useContext(EventContext)
 const [onchange, setOnchange] = useState(false)
 
-  useEffect(()=>{
-    setIsLoading(true);
-    fetch(`${apiEndpoint}/events`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data.events);
-        setEvents(data.events)
-        setIsLoading(false)
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error)
-        setIsLoading(false)
-      })
-  },[onchange, apiEndpoint]);
+  
 
   function handleSubmit(e, eventId, localCommentText) {
     e.preventDefault()
