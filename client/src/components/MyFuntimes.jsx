@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import  { useState, useEffect, useContext } from 'react';
 import '../App.css';
 import Comment from './Comment'; 
 import Swal from 'sweetalert2';

@@ -1,5 +1,3 @@
-
-import React from 'react'
 import FunnyFuntimes from '../components/FunnyFuntimes';
 import SideMenu from '../components/SideMenu';
 import { Link } from 'react-router-dom';
@@ -51,12 +49,12 @@ twhile a dedicated comments section allows visitors to share their
         <img src='https://i.pinimg.com/564x/a6/c7/ce/a6c7cede43b629bab5f5532d4db35033.jpg' alt='img' className='img-fluid'/>
         <h5>Description</h5>
         <p>
-        In 2023, Bennett began releasing tracks from his debut studio album, titled All Is Yellow (2024). T
-        he lead single from the album, "Doomsday", with Juice Wrld and Cordae, was released on June 23, 2023
-         and reached number 58 on the Billboard Hot 100, 49 on the Canadian Hot 100, 83 on the Irish Singles
-          Chart, and 92 on the UK Singles Chart. The album's second single, "Guitar in My Room", with Lil Durk 
-          and Kid Cudi, was released on September 29. The third single .</p>
-
+    In 2023, Bennett began releasing tracks from his debut studio album, titled All Is Yellow (2024). 
+    The lead single from the album, &quot;Doomsday&quot;, featuring Juice Wrld and Cordae, was released on June 23, 2023, 
+    and reached number 58 on the Billboard Hot 100, 49 on the Canadian Hot 100, 83 on the Irish Singles Chart, 
+    and 92 on the UK Singles Chart. The album&apos;s second single, &quot;Guitar in My Room&quot;, featuring Lil Durk 
+    and Kid Cudi, was released on September 29. The third single has yet to be announced.
+</p>
       </div>
       <div className='sidebar-btn'>
      <SideMenu mode='funtime'/>

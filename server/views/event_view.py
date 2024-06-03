@@ -1,10 +1,12 @@
 from models import db, Users, Events, Comment_events
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint,make_response
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import or_, func
 from datetime import datetime
 import base64
+from flask import request
+import json
 
 event_bp = Blueprint('event_bp', __name__)
 
@@ -30,6 +32,7 @@ def get_events():
         } for comment in event.comments]
     } for event in events]
     return jsonify({'events': output})
+    
 
 @event_bp.route('/events/<int:event_id>', methods=['GET'])
 def get_specific_event(event_id):
@@ -61,37 +64,61 @@ def get_specific_event(event_id):
 @event_bp.route('/add-event', methods=['POST'])
 @jwt_required()
 def add_event():
-    current_user = get_jwt_identity()
-    data = request.get_json()
+    try:
+        current_user = get_jwt_identity()
 
-    # Parse date strings into datetime objects
-    date_of_event = datetime.strptime(data['date_of_event'], '%d %b %Y')
-    start_time = datetime.strptime(data['start_time'], '%I:%M %p').time()
-    end_time = datetime.strptime(data['end_time'], '%I:%M %p').time()
+        # Determine if the request is JSON or form-data
+        if request.is_json:
+            data = request.get_json()
+        else:
+            data = {key: request.form[key] for key in request.form}
 
-    # Combine date and time into datetime objects
-    start_datetime = datetime.combine(date_of_event, start_time)
-    end_datetime = datetime.combine(date_of_event, end_time)
+        # Extract event details
+        title = data.get('title')
+        description = data.get('description')
+        date_of_event_str = data.get('date_of_event')
+        start_time_str = data.get('start_time')
+        end_time_str = data.get('end_time')
+        entry_fee = data.get('entry_fee')
+        category = data.get('category')
 
-    # Decode the image data from base64 if needed
-    image_data = data.get('image_data')
-    if image_data:
-        image_data = base64.b64decode(image_data)
+        # Check for missing fields
+        if not all([title, description, date_of_event_str, start_time_str, end_time_str, entry_fee, category]):
+            return make_response(jsonify({"error": "Missing required fields"}), 400)
 
-    new_event = Events(
-        title=data['title'],
-        description=data['description'],
-        start_time=start_datetime,
-        end_time=end_datetime,
-        date_of_event=date_of_event,
-        Entry_fee=data['Entry_fee'],
-        category=data['category'],
-        image_data=image_data,
-        user_id=current_user
-    )
-    db.session.add(new_event)
-    db.session.commit()
-    return jsonify({'message': 'New event created!'})
+        # Parse date and time strings into datetime objects
+        date_of_event = datetime.strptime(date_of_event_str, '%d %b %Y')
+        start_time = datetime.strptime(start_time_str, '%I:%M %p').time()
+        end_time = datetime.strptime(end_time_str, '%I:%M %p').time()
+
+        # Combine date and time into datetime objects
+        start_datetime = datetime.combine(date_of_event, start_time)
+        end_datetime = datetime.combine(date_of_event, end_time)
+
+        # Access the image file
+        image_file = request.files.get('image_data')
+        image_data = image_file.read() if image_file else None
+
+        # Create new event
+        new_event = Events(
+            title=title,
+            description=description,
+            start_time=start_datetime,
+            end_time=end_datetime,
+            date_of_event=date_of_event,
+            entry_fee=entry_fee,
+            category=category,
+            image_data=image_data,
+            user_id=current_user
+        )
+
+        db.session.add(new_event)
+        db.session.commit()
+
+        return make_response(jsonify({"message": "New event created!"}), 201)
+    except Exception as e:
+        db.session.rollback()
+        return make_response(jsonify({"error": str(e)}), 500)
 
 @event_bp.route('/update-event/<int:event_id>', methods=['PUT'])
 @jwt_required()

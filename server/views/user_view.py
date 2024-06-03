@@ -28,10 +28,8 @@ def add_users():
             username=data['username'],
             email=data["email"],
             password=hashed_password,
-            phone_no=data.get("phone_no", ""),
             category=data.get("category"),
-            image_data=data.get("image_data", ""),
-            gender=data.get("gender")
+           
         )
 
         db.session.add(new_user)

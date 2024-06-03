@@ -1,4 +1,3 @@
-import React from 'react';
 import SideMenu from '../components/SideMenu.jsx';
 import { Link } from 'react-router-dom';
 import MyEvents from '../components/MyEvents.jsx';
@@ -59,6 +58,6 @@ export default function MyEventsPage() {
               </div>
             </div>
           );
-        };
+        }
         
         

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import  { useState, useContext, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserContext } from '../context/UserContext';
 import Swal from 'sweetalert2';
@@ -13,20 +13,7 @@ export default function EventFuntimes() {
   // let userId = currentUser.id;
  
 
-  useEffect(() => {
-    setIsLoading(true);
-    fetch(`${apiEndpoint}/fun_times/events`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('Data from fetch:', data.fun_times);
-        setFuntimes(data.fun_times);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-        setIsLoading(false);
-      });
-  }, [onchange, apiEndpoint]);
+  
 
   // const handleLike = async (funtimeId) => {
   //   try {
@@ -209,7 +196,7 @@ const EventCard = ({ index, image_url, description, total_likes, category, usern
                     border: 'none'
                   }}
                 >
-                 <i class="fas fa-arrow-up"></i>
+                 <i className="fas fa-arrow-up"></i>
                 </button>
               </div>
 
