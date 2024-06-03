@@ -12,7 +12,7 @@ const ClothingMarketplace = () => {
     <nav  className="collapse d-lg-block sidebar collapse h-50 overflow-auto"> {/* Sidenav on top half */}
       <div className="position-sticky">
         <div id="sidebarMenu"className="list-group list-group-flush mx-3 mt-4">
-          {/* sidenav links here */}
+         
           <Link to="/marketplace/food" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2" aria-current="true">
           <i className="fas fa-pizza-slice fa-fw me-3"></i><span>Food</span>
           </Link>
