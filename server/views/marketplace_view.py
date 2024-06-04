@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import or_, func
 from datetime import datetime
+import base64
 
 marketplace_bp = Blueprint('marketplace_bp', __name__)
 
@@ -27,7 +28,7 @@ def get_marketplace():
                 'text': review.text,
                 'rating': review.rating,
                 'username': review.user.username,  # Get the username of the user who posted the review
-                'user_image_data': review.user.image_data  # Get the image data of the user who posted the review
+                'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')  # Get the image data of the user who posted the review
             }
             reviews.append(review_data)
         
@@ -40,7 +41,7 @@ def get_marketplace():
             'title': product.title, 
             'description': product.description,
             'price': product.price, 
-            'image_data': product.image_data, 
+            'image_url': base64.b64encode(product.image_data).decode() if product.image_data else None, 
             'category': product.category,
             'average_rating': average_rating,  # Include the average rating in the response
             'reviews': reviews,  # Include the reviews associated with the product
