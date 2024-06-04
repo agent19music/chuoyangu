@@ -41,7 +41,7 @@ import UpdateFuntime from '../pages/UpdateFuntimes';
 import EducationalFuntimesPage from '../pages/EducationalFuntimesPages';
 import MarketplaceProvider from '../context/MarketplaceContext';
 import FuntimeProvider from '../context/FuntimeContext';
-
+import EventProvider from '../context/EventContext';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -52,7 +52,7 @@ function App() {
 
   return (
     <BrowserRouter>
-
+<EventProvider>
    <FuntimeProvider>
    <MarketplaceProvider>
     <UserProvider>
@@ -67,6 +67,7 @@ function App() {
     </UserProvider>
     </MarketplaceProvider>
     </FuntimeProvider>
+    </EventProvider>
    
     </BrowserRouter>
   );
