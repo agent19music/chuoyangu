@@ -8,7 +8,7 @@ export default function AddProduct() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState('');
   const [category, setCategory] = useState('');
   const [contactInfo, setContactInfo] = useState('');
   const [onchange, setOnchange] = useState(false);
@@ -17,27 +17,32 @@ export default function AddProduct() {
 
   const handleAddProduct = (event) => {
     event.preventDefault();
-    axios.post(`${apiEndpoint}/create-product`, {
-      title:title,
-      description: description,
-      price: price,
-      image_url: imageUrl,
-      category: category,
-      contact_info: contactInfo
-    }, {
+  
+    // Create a new FormData instance
+    const formData = new FormData();
+  
+    // Append the form data
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('price', price);
+    formData.append('image_data', imageFile); // Assuming imageFile is a File object
+    formData.append('category', category);
+    formData.append('contact_info', contactInfo);
+  
+    axios.post(`${apiEndpoint}/create-product`, formData, {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization :  `Bearer ${authToken && authToken}`
       },
-    } )
+    })
     .then(res => {
       if(res.status === 200) {
         setOnchange(!onchange);
-         // Reset form fields after successful submission
+        // Reset form fields after successful submission
         setTitle('');
         setDescription('');
         setPrice('');
-        setImageUrl('');
+        setImageFile('');
         setCategory('');
         setContactInfo('');
         navigate('/marketplace')
@@ -46,8 +51,9 @@ export default function AddProduct() {
     .catch(error => {
       console.error('Error posting review:', error);
     });
-    console.log('Product added:', { title, description, price, imageUrl, category });
+    console.log('Product added:', { title, description, price, imageFile, category });
   };
+  
   return (
     <div id='form'className="container py-5">
   <h1 className="text-center mb-4">Add Product</h1>
@@ -100,17 +106,16 @@ export default function AddProduct() {
       </div>
       <div className="col-md-6">
         <div className="form-floating mb-3">
-          <input
-            type="text"
-            id="imageUrl"
-            className="form-control"
-            placeholder="Enter image URL"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-          />
-          <label htmlFor="imageUrl" className="text-muted">
-            Image URL:
-          </label>
+            <input
+      type="file"
+      id="imageFile"
+      className="form-control"
+      onChange={(e) => setImageFile(e.target.files[0])}
+    />
+    <label htmlFor="imageFile" className="text-muted">
+      Image File:
+    </label>
+
         </div>
       </div>
       <div className="col-md-6">

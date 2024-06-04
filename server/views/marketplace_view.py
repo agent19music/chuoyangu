@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import or_, func
 from datetime import datetime
+import base64
 
 marketplace_bp = Blueprint('marketplace_bp', __name__)
 
@@ -27,7 +28,7 @@ def get_marketplace():
                 'text': review.text,
                 'rating': review.rating,
                 'username': review.user.username,  # Get the username of the user who posted the review
-                'user_image_data': review.user.image_data  # Get the image data of the user who posted the review
+                'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')  # Get the image data of the user who posted the review
             }
             reviews.append(review_data)
         
@@ -40,7 +41,7 @@ def get_marketplace():
             'title': product.title, 
             'description': product.description,
             'price': product.price, 
-            'image_data': product.image_data, 
+            'image_url': base64.b64encode(product.image_data).decode() if product.image_data else None, 
             'category': product.category,
             'average_rating': average_rating,  # Include the average rating in the response
             'reviews': reviews,  # Include the reviews associated with the product
@@ -71,7 +72,7 @@ def get_product(product_id):
             'text': review.text,
             'rating': review.rating,
             'username': review.user.username,  # Get the username of the user who posted the review
-            'user_image_data': review.user.image_data  # Get the image data of the user who posted the review
+            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')  # Get the image data of the user who posted the review
         }
         reviews.append(review_data)
     
@@ -85,7 +86,7 @@ def get_product(product_id):
         'title': product.title, 
         'description': product.description, 
         'price': product.price,
-        'image_data': product.image_data,
+        'image_url': base64.b64encode(product.image_data).decode() if product.image_data else None, 
         'category': product.category,
         'average_rating': average_rating,  # Include the average rating in the response
         'reviews': reviews
@@ -113,7 +114,7 @@ def get_my_products():
                 'text': review.text,
                 'rating': review.rating,
                 'username': review.user.username,  # Get the username of the user who posted the review
-                'user_image_data': review.user.image_data  # Get the image data of the user who posted the review
+                'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')  # Get the image data of the user who posted the review
             }
             reviews.append(review_data)
         
@@ -125,7 +126,7 @@ def get_my_products():
             'title': product.title,
             'description': product.description,
             'price': product.price,
-            'image_data': product.image_data,
+            'image_url': base64.b64encode(product.image_data).decode() if product.image_data else None, 
             'category': product.category,
             'contact_info': contact_info,  # Include the contact information in the response
             'average_rating': average_rating,
@@ -139,17 +140,24 @@ def get_my_products():
 @jwt_required()
 def create_product():
     current_user = get_jwt_identity()
-    data = request.get_json()
-     
+
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = {key: request.form[key] for key in request.form}
+
+    image_file = request.files.get('image_data')
+    image_data = image_file.read() if image_file else None     
+
     # Check if the request contains contact_info, otherwise use the user's phone number
     contact_info = data.get('contact_info') if data.get('contact_info') else Users.query.filter_by(id=current_user).first().phone_no
     
     new_product = Products(
-        title=data['title'],
-        description=data['description'],
-        price=data['price'],
-        image_data=data['image_data'], 
-        category=data['category'],
+        title=data.get('title'),
+        description=data.get('description'),
+        price=data.get('price'),
+        image_data=image_data, 
+        category=data.get('category'),
         contact_info=contact_info,
         user_id=current_user
     )
@@ -219,7 +227,7 @@ def get_products_by_category(category):
             'text': review.text,
             'rating': review.rating,
             'username': review.user.username,
-            'user_image_data': review.user.image_data
+            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')
         } for review in product.reviews]
 
         # Determine the contact information for the product
@@ -234,7 +242,7 @@ def get_products_by_category(category):
             'title': product.title,
             'description': product.description,
             'price': product.price,
-            'image_data': product.image_data,
+            'image_url': base64.b64encode(product.image_data).decode() if product.image_data else None, 
             'category': product.category,
             'average_rating': average_rating,
             'reviews': reviews,
@@ -280,7 +288,7 @@ def search_products():
             'text': review.text,
             'rating': review.rating,
             'username': review.user.username,
-            'user_image_data': review.user.image_data
+            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')
         } for review in product.reviews]
 
         # Determine the contact information for the product
@@ -295,7 +303,7 @@ def search_products():
             'title': product.title,
             'description': product.description,
             'price': product.price,
-            'image_data': product.image_data,
+            'image_url': base64.b64encode(product.image_data).decode() if product.image_data else None, 
             'category': product.category,
             'average_rating': average_rating,
             'reviews': reviews,

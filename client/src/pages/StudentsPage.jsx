@@ -17,7 +17,8 @@ export default function StudentsPage() {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${apiEndpoint}/users`);
-        setStudents(response.data.users); // Update state with fetched users data
+        setStudents(response.data.users);
+        // console.log(students); // Update state with fetched users data
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -110,8 +111,11 @@ export default function StudentsPage() {
                   <div className="mb-1 text-muted">Course: {student.category}</div>
                 </div>
                 <div className="col-auto d-none d-lg-block">
-                  <img src={student.image_url} alt={student.username} className="img-fluid" />
-                </div>
+                <img 
+        src={student.image_data ? `data:image/jpeg;base64,${student.image_data}` : '/default-pfp.jpg'} 
+        alt={student.name} 
+        className="student-photo" 
+    />                </div>
               </div>
             </div>
           ))}
