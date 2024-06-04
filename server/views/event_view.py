@@ -87,7 +87,7 @@ def add_event():
             return make_response(jsonify({"error": "Missing required fields"}), 400)
 
         # Parse date and time strings into datetime objects
-        date_of_event = datetime.strptime(date_of_event_str, '%d %b %Y')
+        date_of_event = datetime.strptime(date_of_event_str, "%Y-%m-%d")
         start_time = datetime.strptime(start_time_str, '%I:%M %p').time()
         end_time = datetime.strptime(end_time_str, '%I:%M %p').time()
 

@@ -133,7 +133,7 @@ def get_user_events():
             'start_time': event.start_time.strftime('%I:%M %p'),  # Format start time
             'end_time': event.end_time.strftime('%I:%M %p'),  # Format end time
             'date': event.date_of_event.strftime('%d %b %Y'),  # Format date
-            'entry_fee': event.Entry_fee,
+            'entry_fee': event.entry_fee,
             'category': event.category,
             'comments': [{
                 'id': comment.id,
