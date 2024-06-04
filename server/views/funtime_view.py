@@ -74,9 +74,9 @@ def add_fun_time():
     image_data = image_file.read() if image_file else None    
 
     new_fun_time = Fun_times(
-        description=data['description'],
+        description = data.get('description'),
         image_data=image_data,
-        category=data['category'],
+        category = data.get('category'),
         user_id=current_user
     )
     db.session.add(new_fun_time)
