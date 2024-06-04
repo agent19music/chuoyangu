@@ -139,17 +139,24 @@ def get_my_products():
 @jwt_required()
 def create_product():
     current_user = get_jwt_identity()
-    data = request.get_json()
-     
+
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = {key: request.form[key] for key in request.form}
+
+    image_file = request.files.get('image_data')
+    image_data = image_file.read() if image_file else None     
+
     # Check if the request contains contact_info, otherwise use the user's phone number
     contact_info = data.get('contact_info') if data.get('contact_info') else Users.query.filter_by(id=current_user).first().phone_no
     
     new_product = Products(
-        title=data['title'],
-        description=data['description'],
-        price=data['price'],
-        image_data=data['image_data'], 
-        category=data['category'],
+        title=data.get('title'),
+        description=data.get('description'),
+        price=data.get('price'),
+        image_data=image_data, 
+        category=data.get('category'),
         contact_info=contact_info,
         user_id=current_user
     )
