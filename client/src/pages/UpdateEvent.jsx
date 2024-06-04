@@ -51,6 +51,7 @@ export default function UpdateEvent() {
         });
         if (response.ok) {
           const eventData = await response.json();
+          console.log(eventData);
           setTitle(eventData.title || '');
           setDescription(eventData.description || '');
           setStartDateTime(eventData.start_time || '');

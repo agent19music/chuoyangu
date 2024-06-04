@@ -49,7 +49,7 @@ def get_specific_event(event_id):
         'start_time': event.start_time, 
         'end_time': event.end_time, 
         'date': event.date_of_event.strftime('%d %b %Y'),
-        'entry_fee': event.Entry_fee,
+        'entry_fee': event.entry_fee,
         'category': event.category,
         'comments': [{
             'id': comment.id,
