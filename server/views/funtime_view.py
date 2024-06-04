@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import or_, func
 from datetime import datetime
+import base64
 
 funtime_bp = Blueprint('funtime_bp', __name__)
 
@@ -17,14 +18,14 @@ def get_fun_times():
         fun_time_data = {
             'funtimeId': fun_time.id,
             'description': fun_time.description,
-            'image_data': fun_time.image_data,
+            'image_data': base64.b64encode(fun_time.image_data).decode() if fun_time.image_data else None,
             'category': fun_time.category,
             'total_likes': total_likes,
             'comments': [{
                 'id': comment.id,
                 'text': comment.text,
                 'username': comment.user.username,
-                'image': comment.user.image_url,
+                'image': base64.b64encode(comment.user.image_data).decode() if comment.user.image_data else None,
                 'dateCreated': comment.created_at,
                 'updated_at': comment.updated_at
             } for comment in fun_time.comments]
@@ -45,7 +46,7 @@ def get_user_fun_times():
         fun_time_data = {
             'funtimeId': fun_time.id,
             'description': fun_time.description,
-            'image_data': fun_time.image_data,
+            'image_data': base64.b64encode(fun_time.image_data).decode() if fun_time.image_data else None,
             'category': fun_time.category,
             'total_likes': total_likes,
             'comments': [{
