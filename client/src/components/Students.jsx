@@ -43,9 +43,14 @@ function Student() {
                 {fakeStudents.map((student, index) => (
                     <div key={index} className="col align-self-center">
                         <div className="row">
-                            <div className="col-md-4">
-                                <img src={`data:image/jpeg;base64,${student.photo}`} alt={student.name} className="student-photo" />
+                        <div className="col-md-4">
+                                <img 
+                                    src={student.image_data ? `data:image/jpeg;base64,${student.image_data}` : '/default-pfp.jpg'} 
+                                    alt={student.name} 
+                                    className="student-photo" 
+                                />
                             </div>
+
                             <div className="col-md-8">
                                 <h2>Name: {student.name}</h2>
                                 <p>ID: {student.id}</p>
