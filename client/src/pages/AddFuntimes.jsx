@@ -9,10 +9,9 @@ export default function AddFunTime() {
   const [description, setDescription] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [category, setCategory] = useState('');
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     if (!description || !imageFile || !category) {
       Swal.fire({
         icon: 'error',
@@ -21,14 +20,19 @@ export default function AddFunTime() {
       });
       return;
     }
-
+  
+    const formData = new FormData();
+    formData.append('description', description);
+    formData.append('image_data', imageFile)
+    formData.append('category', category)
+  
     try {
       const response = await fetch(`${apiEndpoint}/add-fun_time`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
-        body: FormData,
+        body: formData, // Pass formData to body
       });
       
       if (response.ok) {
@@ -55,16 +59,7 @@ export default function AddFunTime() {
       });
     }
   };
-
-  const formData = new FormData();
-  formData.append('description', description);
-  formData.append('image_data', imageFile)
-  formData.append('category', category)
-
-  for (const [key, value] of formData.entries()) {
-    console.log(`${key}: ${value}`);
-  }
-
+  
   return (
     <div id='form' className="container py-5">
       <h1 className="text-center mb-4">Add Fun-Time</h1>

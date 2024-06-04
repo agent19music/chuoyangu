@@ -145,7 +145,7 @@ const EventCard = ({ index, image_url, description, total_likes, category, usern
       <div className="row no-gutters">
         <div className="col-md-4">
           <i className="fas fa-user fa-fw me-3"></i> User: {username}
-          <img src={image_url} alt="" className="img-fluid"/>
+          <img  src={`data:image/jpeg;base64,${image_url}`} alt="" className="img-fluid"/>
          
         </div>
         <div className="col-md-4 mx-auto">
