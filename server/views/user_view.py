@@ -159,7 +159,7 @@ def get_user_fun_times():
         fun_time_data = {
             'funtimeId': fun_time.id,
             'description': fun_time.description,
-            'image_data': base64.b64encode(fun_time.image_data).decode() if fun_time.image_data else None,
+            'image_url': base64.b64encode(fun_time.image_data).decode() if fun_time.image_data else None,
             'category': fun_time.category,
             'total_likes': total_likes,
             'comments': [{
