@@ -1,5 +1,5 @@
 from models import db, Likes, Fun_times, Comment_fun_times
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint, make_response
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import or_, func
@@ -32,7 +32,7 @@ def get_fun_times():
         }
         output.append(fun_time_data)
     
-    return jsonify({'fun_times': output})
+    return make_response(jsonify(output), 200)
 
 @funtime_bp.route('/user-fun_times', methods=['GET'])
 @jwt_required()
