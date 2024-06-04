@@ -17,14 +17,15 @@ export default function StudentsPage() {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${apiEndpoint}/users`);
-        setStudents(response.data.users); // Update state with fetched users data
+        setStudents(response.data.users);
+        // console.log(students); // Update state with fetched users data
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
   
     fetchData();
-  }, [apiEndpoint]);
+  }, [apiEndpoint, students]);
   
 
   // const filterStudentsByCourse = async (course) => {
