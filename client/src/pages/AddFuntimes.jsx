@@ -7,13 +7,12 @@ export default function AddFunTime() {
   const navigate = useNavigate()
   const { apiEndpoint, authToken} = useContext(UserContext);
   const [description, setDescription] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState(null);
   const [category, setCategory] = useState('');
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    if (!description || !imageUrl || !category) {
+  
+    if (!description || !imageFile || !category) {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -21,19 +20,19 @@ export default function AddFunTime() {
       });
       return;
     }
-
+  
+    const formData = new FormData();
+    formData.append('description', description);
+    formData.append('image_data', imageFile)
+    formData.append('category', category)
+  
     try {
       const response = await fetch(`${apiEndpoint}/add-fun_time`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({
-          description,
-          image_url: imageUrl,
-          category,
-        }),
+        body: formData, // Pass formData to body
       });
       
       if (response.ok) {
@@ -43,7 +42,7 @@ export default function AddFunTime() {
         });
         // Reset form fields
         setDescription('');
-        setImageUrl('');
+        setImageFile('');
         setCategory('');
         navigate('/')
       }
@@ -60,7 +59,7 @@ export default function AddFunTime() {
       });
     }
   };
-
+  
   return (
     <div id='form' className="container py-5">
       <h1 className="text-center mb-4">Add Fun-Time</h1>
@@ -82,20 +81,18 @@ export default function AddFunTime() {
             </div>
           </div>
           <div className="col-md-6">
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                id="imageUrl"
-                className="form-control"
-                placeholder="Enter image URL"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-              />
-              <label htmlFor="imageUrl" className="text-muted">
-                Image URL:
-              </label>
-            </div>
+          <div className="form-floating mb-3">
+            <input
+              type="file"
+              id="imageFile"
+              className="form-control"
+              onChange={(e) => setImageFile(e.target.files[0])} // Change this line
+            />
+            <label htmlFor="imageFile" className="text-muted">
+              Image File:
+            </label>
           </div>
+        </div>
           <div className="col-md-6">
             <div className="form-floating mb-3">
               <select

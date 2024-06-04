@@ -7,6 +7,7 @@ from datetime import datetime
 import base64
 from flask import request
 import json
+import base64
 
 event_bp = Blueprint('event_bp', __name__)
 
@@ -14,24 +15,24 @@ event_bp = Blueprint('event_bp', __name__)
 def get_events():
     events = Events.query.all()
     output = [{
-        'eventId': event.id, 
-        'title': event.title, 
-        'description': event.description, 
-        'poster': event.image_data,
-        'start_time': event.start_time, 
-        'end_time': event.end_time, 
+        'eventId': event.id,
+        'title': event.title,
+        'description': event.description,
+        'poster': base64.b64encode(event.image_data).decode() if event.image_data else None,
+        'start_time': event.start_time,
+        'end_time': event.end_time,
         'date': event.date_of_event.strftime('%d %b %Y'),
-        'entry_fee': event.Entry_fee,
+        'entry_fee': event.entry_fee,
         'category': event.category,
         'comments': [{
             'id': comment.id,
-            'text': comment.text, 
-            'image': comment.user.image_data,
+            'text': comment.text,
+            'image': base64.b64encode(comment.user.image_data).decode() if comment.user.image_data else None,
             'username': comment.user.username,
-            'dateCreated': comment.created_at  
+            'dateCreated': comment.created_at
         } for comment in event.comments]
     } for event in events]
-    return jsonify({'events': output})
+    return make_response(jsonify(output), 200)
     
 
 @event_bp.route('/events/<int:event_id>', methods=['GET'])
@@ -43,17 +44,17 @@ def get_specific_event(event_id):
     output = {
         'eventId': event.id, 
         'title': event.title, 
-        'poster': event.image_data,
+        'poster': base64.b64encode(event.image_data).decode() if event.image_data else None,
         'description': event.description, 
         'start_time': event.start_time, 
         'end_time': event.end_time, 
         'date': event.date_of_event.strftime('%d %b %Y'),
-        'entry_fee': event.Entry_fee,
+        'entry_fee': event.entry_fee,
         'category': event.category,
         'comments': [{
             'id': comment.id,
             'text': comment.text, 
-            'image': comment.user.image_data,
+            'image': base64.b64encode(comment.user.image_data).decode() if comment.user.image_data else None,
             'username': comment.user.username, 
             'dateCreated': comment.created_at 
         } for comment in event.comments]
@@ -87,7 +88,7 @@ def add_event():
             return make_response(jsonify({"error": "Missing required fields"}), 400)
 
         # Parse date and time strings into datetime objects
-        date_of_event = datetime.strptime(date_of_event_str, '%d %b %Y')
+        date_of_event = datetime.strptime(date_of_event_str, "%Y-%m-%d")
         start_time = datetime.strptime(start_time_str, '%I:%M %p').time()
         end_time = datetime.strptime(end_time_str, '%I:%M %p').time()
 

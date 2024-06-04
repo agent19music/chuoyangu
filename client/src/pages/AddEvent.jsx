@@ -43,7 +43,6 @@ export default function AddEvent() {
       const response = await fetch(`${apiEndpoint}/add-event`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
         body: formData,
@@ -85,16 +84,16 @@ export default function AddEvent() {
     }
   
     // Format date and time values
-    // const formattedStartDateTime = getTimestamp(startDateTime);
-    // const formattedEndDateTime = getTimestamp(endDateTime);
+    const formattedStartDateTime = getTimestamp(startDateTime);
+    const formattedEndDateTime = getTimestamp(endDateTime);
     // const formattedDateOfEvent = formatDate(dateOfEvent);
   
     // Create FormData object and append form data
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', description);
-    formData.append('start_time', startDateTime);
-    formData.append('end_time', endDateTime);
+    formData.append('start_time', formattedStartDateTime);
+    formData.append('end_time', formattedEndDateTime);
     formData.append('date_of_event', dateOfEvent);
     formData.append('entry_fee', entryFee);
     formData.append('category', category);

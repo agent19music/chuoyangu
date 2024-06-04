@@ -1,9 +1,10 @@
 from models import db, Likes, Fun_times, Comment_fun_times
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint, make_response
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import or_, func
 from datetime import datetime
+import base64
 
 funtime_bp = Blueprint('funtime_bp', __name__)
 
@@ -17,21 +18,21 @@ def get_fun_times():
         fun_time_data = {
             'funtimeId': fun_time.id,
             'description': fun_time.description,
-            'image_data': fun_time.image_data,
+            'image_url': base64.b64encode(fun_time.image_data).decode() if fun_time.image_data else None,
             'category': fun_time.category,
             'total_likes': total_likes,
             'comments': [{
                 'id': comment.id,
                 'text': comment.text,
                 'username': comment.user.username,
-                'image': comment.user.image_url,
+                'image': base64.b64encode(comment.user.image_data).decode() if comment.user.image_data else None,
                 'dateCreated': comment.created_at,
                 'updated_at': comment.updated_at
             } for comment in fun_time.comments]
         }
         output.append(fun_time_data)
     
-    return jsonify({'fun_times': output})
+    return make_response(jsonify(output), 200)
 
 @funtime_bp.route('/user-fun_times', methods=['GET'])
 @jwt_required()
@@ -45,7 +46,7 @@ def get_user_fun_times():
         fun_time_data = {
             'funtimeId': fun_time.id,
             'description': fun_time.description,
-            'image_data': fun_time.image_data,
+            'image_url': base64.b64encode(fun_time.image_data).decode() if fun_time.image_data else None,
             'category': fun_time.category,
             'total_likes': total_likes,
             'comments': [{
@@ -63,11 +64,19 @@ def get_user_fun_times():
 @jwt_required()
 def add_fun_time():
     current_user = get_jwt_identity()
-    data = request.get_json()
+    
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = {key: request.form[key] for key in request.form}
+
+    image_file = request.files.get('image_data')
+    image_data = image_file.read() if image_file else None    
+
     new_fun_time = Fun_times(
-        description=data['description'],
-        image_data=data['image_data'],
-        category=data['category'],
+        description = data.get('description'),
+        image_data=image_data,
+        category = data.get('category'),
         user_id=current_user
     )
     db.session.add(new_fun_time)
@@ -219,7 +228,7 @@ def get_fun_times_by_category(category):
         fun_time_data = {
             'id': fun_time.id,
             'description': fun_time.description,
-            'image_data': fun_time.image_data,
+            'image_url': base64.b64encode(fun_time.image_data).decode() if fun_time.image_data else None,
             'category': fun_time.category,
             'total_likes': total_likes,
             'comments': [{
@@ -243,7 +252,7 @@ def get_latest_fun_times():
         fun_time_data = {
             'id': fun_time.id,
             'description': fun_time.description,
-            'image_data': fun_time.image_data,
+            'image_url': base64.b64encode(fun_time.image_data).decode() if fun_time.image_data else None,
             'category': fun_time.category,
             'created_at': fun_time.created_at,
             'total_likes': total_likes,

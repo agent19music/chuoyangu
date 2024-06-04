@@ -137,7 +137,7 @@ export default function MyEvents() {
       <div className="card my-4">
       <div className="row no-gutters">
         <div className="col-md-4">
-          <img src={poster} alt="" className="img-fluid"/>
+        <img src={`data:image/jpeg;base64,${poster}`} alt="" className="img-fluid"/>
         </div>
         <div className="col-md-4 mx-auto">
         <div className="card-body position-relative"> {/* Add position-relative here */}
