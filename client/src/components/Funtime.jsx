@@ -1,19 +1,13 @@
-import  { useState, useContext, useEffect } from 'react';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
 import Swal from 'sweetalert2';
 import Comment from './Comment';
 import { FuntimeContext } from '../context/FuntimeContext';
+import PropTypes from 'prop-types';
 
 export default function Funtime() {
-
-  const {authToken, currentUser, apiEndpoint} = useContext(UserContext)
-  const {funtimes, setOnchange, setFuntimes, isLoading} = useContext(FuntimeContext)
-  
-  // let userId = currentUser.id;
- 
-
-  
+  const { authToken, currentUser, apiEndpoint } = useContext(UserContext);
+  const { funtimes, setOnchange, setFuntimes, isLoading } = useContext(FuntimeContext);
 
   const handleLike = async (funtimeId) => {
     try {
@@ -24,14 +18,14 @@ export default function Funtime() {
           Authorization: `Bearer ${authToken && authToken}`,
         },
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to toggle like');
       }
-  
+
       const data = await response.json();
       console.log(data);
-  
+
       setFuntimes((prevFuntimes) => {
         return prevFuntimes.map((funTime) => {
           if (funTime.id === funtimeId) {
@@ -44,7 +38,6 @@ export default function Funtime() {
           return funTime;
         });
       });
-  
     } catch (error) {
       console.error('Error toggling like:', error.message);
       Swal.fire({
@@ -53,82 +46,65 @@ export default function Funtime() {
       });
     }
   };
-  
-  // Use useEffect to show the success message after funtimes state updates
+
   useEffect(() => {
     console.log('liked');
   }, [funtimes]);
-  // const handleLike = (index) => {
-  //   const updatedFuntimes = [...funtimes];
-  //   updatedFuntimes[index].liked = !updatedFuntimes[index].liked;
-  //   if (updatedFuntimes[index].liked) {
-  //     updatedFuntimes[index].total_likes += 1;
-  //   } else {
-  //     updatedFuntimes[index].total_likes -= 1;
-  //   }
-  //   setFuntimes(updatedFuntimes);
-  // };
-  
-  
-
-
-  
 
   function handleSubmit(e, funtimeId, localCommentText) {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (!localCommentText){
+    if (!localCommentText) {
       Swal.fire({
         icon: 'error',
         text: 'Please enter a comment!',
       });
       return;
     }
-    if (localCommentText.length > 300){
+    if (localCommentText.length > 300) {
       Swal.fire({
         icon: 'error',
-        text: 'Comment must be 300 characters or less !',
+        text: 'Comment must be 300 characters or less!',
       });
       return;
     }
 
-    if(localCommentText !== ''){
-      sendComment(localCommentText, funtimeId)
+    if (localCommentText !== '') {
+      sendComment(localCommentText, funtimeId);
     }
   }
 
-  function sendComment(localCommentText, funtimeId){
+  function sendComment(localCommentText, funtimeId) {
     fetch(`${apiEndpoint}/comment-fun_time/${funtimeId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization :  `Bearer ${authToken && authToken}`,
+        Authorization: `Bearer ${authToken && authToken}`,
       },
-      body: JSON.stringify({text:localCommentText, fun_time_id: funtimeId }),
-    })
-    .then(res => {
-      if(res.ok){
-          setOnchange(!onchange)
+      body: JSON.stringify({ text: localCommentText, fun_time_id: funtimeId }),
+    }).then((res) => {
+      if (res.ok) {
+        setOnchange((prev) => !prev);
       }
-  })
-  
+    });
   }
-  if (isLoading)
-  return <h2 className="text-2xl text-center mt-12">Loading...</h2>;
+
+  if (isLoading) return <h2 className="text-2xl text-center mt-12">Loading...</h2>;
 
   return (
     <div id='event-holder' className="bg-light overflow-auto">
       <h4>FUNTIMES</h4>
       <div className="mx-auto">
         {funtimes && funtimes.map((event, index) => (
-          <EventCard
+          <FuntimeCard
             key={index}
             index={index}
             {...event}
             funtimeId={event.funtimeId}
-            userId = {currentUser.id}
+            userId={currentUser.id}
             handleLike={handleLike}
-            handleSubmit ={handleSubmit}
+            handleSubmit={handleSubmit}
+            
           />
         ))}
       </div>
@@ -136,8 +112,20 @@ export default function Funtime() {
   );
 }
 
-const EventCard = ({ index, image_url, description, total_likes, category, username, liked, comments, handleLike, handleSubmit, funtimeId, userId }) => {
-
+const FuntimeCard = ({
+  index,
+  image_url,
+  description,
+  total_likes,
+  category,
+  username,
+  // liked,
+  comments,
+  handleLike,
+  handleSubmit,
+  funtimeId,
+  // userId,
+}) => {
   const [localCommentText, setLocalCommentText] = useState('');
 
   return (
@@ -145,56 +133,59 @@ const EventCard = ({ index, image_url, description, total_likes, category, usern
       <div className="row no-gutters">
         <div className="col-md-4">
           <i className="fas fa-user fa-fw me-3"></i> User: {username}
-          <img  src={`data:image/jpeg;base64,${image_url}`} alt="" className="img-fluid"/>
-         
+          <img src={`data:image/jpeg;base64,${image_url}`} alt="" className="img-fluid" />
         </div>
         <div className="col-md-4 mx-auto">
           <div className="card-body">
             <h5 className="h3 font-weight-bold">{description}</h5>
             <div className="d-flex justify-content-between align-items-center mt-2">
-            <span className="text-muted">
-              <i className="far fa-heart" onClick={() => handleLike(index)} style={{ cursor: 'pointer' }} ></i> Likes: {total_likes}
+              <span className="text-muted">
+                <i className="far fa-heart" onClick={() => handleLike(index)} style={{ cursor: 'pointer' }}></i> Likes: {total_likes}
               </span>
               <span className="text-muted">
                 <i className="fas fa-list"></i> Category: {category}
               </span>
             </div>
             <div className="px-4 py-2">
-            <h3>COMMENTS:</h3>
+              <h3>COMMENTS:</h3>
               <Comment comments={comments} />
-                   <div className="comment-input" style={{
-                display: 'flex',
-                alignItems: 'center',
-                backgroundColor: '#ffff', 
-                borderRadius: '25px', // Rounded Corners
-                padding: '10px' // Inner Spacing
-              }}>
+              <div
+                className="comment-input"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: '#ffff',
+                  borderRadius: '25px',
+                  padding: '10px',
+                }}
+              >
                 <input
                   type="text"
                   placeholder="Add a comment..."
                   className="form-control mt-2"
                   style={{
                     backgroundColor: 'transparent',
-                    border:'black',
-                    color: 'black', // Text Color
-                    fontSize: 'large' // Text Size
+                    border: 'black',
+                    color: 'black',
+                    fontSize: 'large',
                   }}
                   value={localCommentText}
-          onChange={(e) => setLocalCommentText(e.target.value)}
+                  onChange={(e) => setLocalCommentText(e.target.value)}
                 />
-                <button 
-                  className="submit-button" 
-                  onClick={(e) => {handleSubmit(e, funtimeId, localCommentText); 
-                  setLocalCommentText('');}} 
+                <button
+                  className="submit-button"
+                  onClick={(e) => {
+                    handleSubmit(e, funtimeId, localCommentText);
+                    setLocalCommentText('');
+                  }}
                   style={{
                     backgroundColor: 'transparent',
-                    border: 'none'
+                    border: 'none',
                   }}
                 >
-                 <i className="fas fa-arrow-up"></i>
+                  <i className="fas fa-arrow-up"></i>
                 </button>
               </div>
-
             </div>
           </div>
         </div>
@@ -203,3 +194,65 @@ const EventCard = ({ index, image_url, description, total_likes, category, usern
   );
 };
 
+FuntimeCard.propTypes = {
+  index: PropTypes.number.isRequired,
+  image_url: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  total_likes: PropTypes.number.isRequired,
+  category: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  liked: PropTypes.bool.isRequired,
+  comments: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      text: PropTypes.string,
+      user_id: PropTypes.number,
+      fun_time_id: PropTypes.number,
+    })
+  ).isRequired,
+  handleLike: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  funtimeId: PropTypes.number.isRequired,
+  userId: PropTypes.number.isRequired,
+};
+
+Funtime.propTypes = {
+  authToken: PropTypes.string,
+  currentUser: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }).isRequired,
+  apiEndpoint: PropTypes.string.isRequired,
+  funtimes: PropTypes.arrayOf(
+    PropTypes.shape({
+      funtimeId: PropTypes.number,
+      image_url: PropTypes.string,
+      description: PropTypes.string,
+      total_likes: PropTypes.number,
+      category: PropTypes.string,
+      username: PropTypes.string,
+      liked: PropTypes.bool,
+      comments: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.number,
+          text: PropTypes.string,
+          user_id: PropTypes.number,
+          fun_time_id: PropTypes.number,
+        })
+      ),
+    })
+  ).isRequired,
+  setOnchange: PropTypes.func.isRequired,
+  setFuntimes: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+};
+
+Comment.propTypes = {
+  comments: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      text: PropTypes.string,
+      user_id: PropTypes.number,
+      fun_time_id: PropTypes.number,
+    })
+  ).isRequired,
+};
