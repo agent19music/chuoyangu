@@ -110,7 +110,7 @@ export default function StudentsPage() {
                   <div className="mb-1 text-muted">Course: {student.category}</div>
                 </div>
                 <div className="col-auto d-none d-lg-block">
-                  <img src={student.image_url} alt={student.username} className="img-fluid" />
+                <img src={`data:image/jpeg;base64,${student.image_url}`} alt={student.username} className="img-fluid" />
                 </div>
               </div>
             </div>
