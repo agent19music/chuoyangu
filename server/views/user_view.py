@@ -3,6 +3,7 @@ from flask import request, jsonify, Blueprint
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import or_, func
+import base64
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -129,7 +130,7 @@ def get_user_events():
             'id': event.id,
             'title': event.title,
             'description': event.description,
-            'poster': event.image_data,
+            'poster': base64.b64encode(event.image_data).decode() if event.image_data else None,
             'start_time': event.start_time.strftime('%I:%M %p'),  # Format start time
             'end_time': event.end_time.strftime('%I:%M %p'),  # Format end time
             'date': event.date_of_event.strftime('%d %b %Y'),  # Format date

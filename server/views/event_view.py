@@ -44,7 +44,7 @@ def get_specific_event(event_id):
     output = {
         'eventId': event.id, 
         'title': event.title, 
-        'poster': event.image_data,
+        'poster': base64.b64encode(event.image_data).decode() if event.image_data else None,
         'description': event.description, 
         'start_time': event.start_time, 
         'end_time': event.end_time, 
@@ -54,7 +54,7 @@ def get_specific_event(event_id):
         'comments': [{
             'id': comment.id,
             'text': comment.text, 
-            'image': comment.user.image_data,
+            'image': base64.b64encode(comment.user.image_data).decode() if comment.user.image_data else None,
             'username': comment.user.username, 
             'dateCreated': comment.created_at 
         } for comment in event.comments]
