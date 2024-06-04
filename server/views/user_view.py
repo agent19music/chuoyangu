@@ -43,6 +43,28 @@ def add_users():
         print(str(e))
         db.session.rollback()
         return jsonify({"message": "Internal Server Error"}), 500
+    
+
+@user_bp.route('/users', methods=['GET'])
+def get_all_users():
+    users = Users.query.all()
+    if users:
+        all_users = []
+        for user in users:
+            all_users.append({
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'username': user.username,
+                'phone_no': user.phone_no,
+                'category': user.category,
+                'image_data': user.image_data,
+                'gender': user.gender
+            })
+        return jsonify({'users': all_users})
+    else:
+        return jsonify(message="No users found"), 404
+
 
 # Route to get a specific user by id
 @user_bp.route('/users/<int:user_id>', methods=['GET'])
