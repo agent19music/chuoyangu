@@ -44,11 +44,13 @@ function Student() {
                     <div key={index} className="col align-self-center">
                         <div className="row">
                         <div className="col-md-4">
-                                <img 
+                            {student.image_data &&  <img src={`data:image/jpeg;base64,${student.image_data}`} alt={student.name} className="student-photo" />}
+                            {!student.image_data && <img src='/default-pfp.jpg'/>}
+                                {/* <img 
                                     src={student.image_data ? `data:image/jpeg;base64,${student.image_data}` : '/default-pfp.jpg'} 
                                     alt={student.name} 
                                     className="student-photo" 
-                                />
+                                /> */}
                             </div>
 
                             <div className="col-md-8">
