@@ -16,8 +16,8 @@ export default function FuntimeProvider({children}){
         fetch(`${apiEndpoint}/fun_times`)
           .then((res) => res.json())
           .then((data) => {
-            console.log('Data from fetch:', data.fun_times);
-            setFuntimes(data.fun_times);
+            console.log('Data from fetch:', data);
+            setFuntimes(data);
             setIsLoading(false);
           })
           .catch((error) => {
