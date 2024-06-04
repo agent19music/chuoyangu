@@ -64,10 +64,18 @@ def get_user_fun_times():
 @jwt_required()
 def add_fun_time():
     current_user = get_jwt_identity()
-    data = request.get_json()
+    
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = {key: request.form[key] for key in request.form}
+
+    image_file = request.files.get('image_data')
+    image_data = image_file.read() if image_file else None    
+
     new_fun_time = Fun_times(
         description=data['description'],
-        image_data=data['image_data'],
+        image_data=image_data,
         category=data['category'],
         user_id=current_user
     )
