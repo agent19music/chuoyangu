@@ -72,7 +72,7 @@ def get_product(product_id):
             'text': review.text,
             'rating': review.rating,
             'username': review.user.username,  # Get the username of the user who posted the review
-            'user_image_data': review.user.image_data  # Get the image data of the user who posted the review
+            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')  # Get the image data of the user who posted the review
         }
         reviews.append(review_data)
     
@@ -86,7 +86,7 @@ def get_product(product_id):
         'title': product.title, 
         'description': product.description, 
         'price': product.price,
-        'image_data': product.image_data,
+        'image_url': base64.b64encode(product.image_data).decode() if product.image_data else None, 
         'category': product.category,
         'average_rating': average_rating,  # Include the average rating in the response
         'reviews': reviews
@@ -114,7 +114,7 @@ def get_my_products():
                 'text': review.text,
                 'rating': review.rating,
                 'username': review.user.username,  # Get the username of the user who posted the review
-                'user_image_data': review.user.image_data  # Get the image data of the user who posted the review
+                'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')  # Get the image data of the user who posted the review
             }
             reviews.append(review_data)
         
@@ -126,7 +126,7 @@ def get_my_products():
             'title': product.title,
             'description': product.description,
             'price': product.price,
-            'image_data': product.image_data,
+            'image_url': base64.b64encode(product.image_data).decode() if product.image_data else None, 
             'category': product.category,
             'contact_info': contact_info,  # Include the contact information in the response
             'average_rating': average_rating,
@@ -227,7 +227,7 @@ def get_products_by_category(category):
             'text': review.text,
             'rating': review.rating,
             'username': review.user.username,
-            'user_image_data': review.user.image_data
+            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')
         } for review in product.reviews]
 
         # Determine the contact information for the product
@@ -242,7 +242,7 @@ def get_products_by_category(category):
             'title': product.title,
             'description': product.description,
             'price': product.price,
-            'image_data': product.image_data,
+            'image_url': base64.b64encode(product.image_data).decode() if product.image_data else None, 
             'category': product.category,
             'average_rating': average_rating,
             'reviews': reviews,
@@ -288,7 +288,7 @@ def search_products():
             'text': review.text,
             'rating': review.rating,
             'username': review.user.username,
-            'user_image_data': review.user.image_data
+            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')
         } for review in product.reviews]
 
         # Determine the contact information for the product
@@ -303,7 +303,7 @@ def search_products():
             'title': product.title,
             'description': product.description,
             'price': product.price,
-            'image_data': product.image_data,
+            'image_url': base64.b64encode(product.image_data).decode() if product.image_data else None, 
             'category': product.category,
             'average_rating': average_rating,
             'reviews': reviews,
