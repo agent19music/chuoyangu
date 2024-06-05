@@ -1,38 +1,41 @@
-import React, { useState, useContext, useEffect } from 'react';
-import '../App.css';
+import { useState, useEffect, useContext } from 'react';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
-import { Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
-function UpdateProfile() {
+export default function UpdateFuntime() {
   const navigate = useNavigate();
-  const { currentUser, authToken, updateUserContext, apiEndpoint } = useContext(UserContext);
+  const { authToken, apiEndpoint } = useContext(UserContext);
+  const { funtimeId } = useParams();
 
-  // Initialize state with current user data
-  const [email, setEmail] = useState(currentUser.email || '');
-  const [username, setUsername] = useState(currentUser.username || '');
-  const [imageUrl, setImageUrl] = useState(currentUser.image_url || '/default-pfp.jpg'); 
+  const [description, setDescription] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [imageData, setImageData] = useState(null);
-  const [phoneNo, setPhoneNo] = useState(currentUser.phone_no || ''); 
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [firstName, setFirstName] = useState(currentUser.first_name || '');
-  const [lastName, setLastName] = useState(currentUser.last_name || '');
-  const [course, setCourse] = useState(currentUser.course || '');
-  const [gender, setGender] = useState(currentUser.gender || '');
+  const [category, setCategory] = useState('');
 
   useEffect(() => {
-    // Update state when currentUser changes
-    setEmail(currentUser.email || '');
-    setUsername(currentUser.username || '');
-    setFirstName(currentUser.first_name || '');
-    setLastName(currentUser.last_name || '');
-    setCourse(currentUser.course || '');
-    setGender(currentUser.gender || '');
-    setImageUrl(currentUser.image_url || '/default-pfp.jpg');
-    setPhoneNo(currentUser.phone_no || '');
-  }, [currentUser]);
+    const fetchFuntimeData = async () => {
+      try {
+        const response = await fetch(`${apiEndpoint}/fun_time/${funtimeId}`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        if (response.ok) {
+          const funtimeData = await response.json();
+          setDescription(funtimeData.description || '');
+          setImageUrl(funtimeData.image_url || '');
+          setCategory(funtimeData.category || '');
+        } else {
+          throw new Error('Failed to fetch funtime data');
+        }
+      } catch (error) {
+        console.error('Error fetching funtime data:', error);
+      }
+    };
+
+    fetchFuntimeData();
+  }, [funtimeId, apiEndpoint, authToken]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -44,259 +47,92 @@ function UpdateProfile() {
     reader.readAsDataURL(file);
   };
 
-  const updateUser = async (e) => {
-    e.preventDefault();
-    // Check if passwords match
-    if (password !== confirmPassword) {
-      Swal.fire({
-        icon: 'error',
-        text: 'Passwords do not match!',
-      });
-      return;
-    }
-
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
-      const response = await fetch(`${apiEndpoint}/update-profile`, {
+      const response = await fetch(`${apiEndpoint}/update-fun_time/${funtimeId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`
+          Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({
-          email,
-          username,
-          password,
-          first_name: firstName,
-          last_name: lastName,
-          category: course,
-          gender,
-          image_data: imageData, 
-          phone_no: phoneNo
-        })
+        body: JSON.stringify({ description, image_data: imageData, category }),
       });
-
-      const data = await response.json();
-
       if (response.ok) {
-        // Update user context with the updated user information
-        updateUserContext();
         Swal.fire({
-          position: 'center',
           icon: 'success',
-          title: 'Your profile has been updated.',
-          showConfirmButton: false,
-          timer: 1500,
+          title: 'Funtime updated successfully!',
         });
-        navigate('/myprofile');
-      } else if (response.status === 500) {
-        Swal.fire({
-          icon: 'error',
-          text: 'An error occurred: ' + data.message,
-        });
-      } else if (response.status === 400) {
-        Swal.fire({
-          icon: 'error',
-          text: 'Oops! ' + data.message,
-        });
+        navigate('/myprofile/myfuntimes');
+      } else {
+        throw new Error('Failed to update funtime');
       }
     } catch (error) {
-      console.error('Error:', error);
-      Swal.fire({
-        icon: 'error',
-        text: 'A network error occurred: ' + error.message,
-      });
+      console.error('Error updating funtime:', error);
     }
   };
 
   return (
-    <div id='form' className="container py-5">
-      <h1 className="text-center mb-4">Update Profile</h1>
-      <div className="text-center mb-4">
-        <img src={imageUrl} alt="Profile" className="img-fluid rounded-circle" style={{ width: '150px', height: '150px' }} />
-        <div className="form-floating mt-3">
-          <input
-            type="file"
-            id="imageFile"
-            className="form-control"
-            onChange={handleImageChange}
-          />
-          <label htmlFor="imageFile" className="text-muted">Select Profile Image:</label>
-        </div>
-      </div>
-      <form onSubmit={updateUser}>
+    <div id="form" className="container py-5">
+      <h1 className="text-center mb-4">Update Fun-Time</h1>
+      <form onSubmit={handleSubmit}>
         <div className="row g-4">
           <div className="col-md-6">
             <div className="form-floating mb-3">
               <input
                 type="text"
-                id="firstName"
+                id="description"
                 className="form-control"
-                placeholder="Enter your first name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Enter Fun-Time description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
-              <label htmlFor="firstName" className="text-muted">
-                First Name:
+              <label htmlFor="description" className="text-muted">
+                Description:
               </label>
             </div>
           </div>
           <div className="col-md-6">
             <div className="form-floating mb-3">
               <input
-                type="text"
-                id="lastName"
+                type="file"
+                id="imageFile"
                 className="form-control"
-                placeholder="Enter your last name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={handleImageChange}
               />
-              <label htmlFor="lastName" className="text-muted">
-                Last Name:
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="form-floating mb-3">
-              <input
-                type="email"
-                id="email"
-                className="form-control"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <label htmlFor="email" className="text-muted">
-                Email:
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                id="username"
-                className="form-control"
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <label htmlFor="username" className="text-muted">
-                Username:
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="form-floating mb-3">
-              <input
-                type="password"
-                id="password"
-                className="form-control"
-                placeholder="Enter your new password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <label htmlFor="password" className="text-muted">
-                New Password:
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="form-floating mb-3">
-              <input
-                type="password"
-                id="confirmPassword"
-                className="form-control"
-                placeholder="Confirm your new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              <label htmlFor="confirmPassword" className="text-muted">
-                Confirm New Password:
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                id="imageUrl"
-                className="form-control"
-                placeholder="Enter your image URL"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-              />
-              <label htmlFor="imageUrl" className="text-muted">
-                Image URL:
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                id="phoneNo"
-                className="form-control"
-                placeholder="Enter your phone number"
-                value={phoneNo}
-                onChange={(e) => setPhoneNo(e.target.value)}
-              />
-              <label htmlFor="phoneNo" className="text-muted">
-                Phone Number:
+              <label htmlFor="imageFile" className="text-muted">
+                Select Image:
               </label>
             </div>
           </div>
           <div className="col-md-6">
             <div className="form-floating mb-3">
               <select
-                id="course"
+                id="category"
                 className="form-select rounded"
-                value={course}
-                onChange={(e) => setCourse(e.target.value)}
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
               >
-                <option value="">Select Course</option>
-                <option value="Software Engineering">
-                  Software Engineering
-                </option>
-                <option value="UI/UX">UI/UX</option>
-                <option value="Data Science">Data Science</option>
-                <option value="Product Design">Product Design</option>
+                <option value="">Select Category</option>
+                <option value="Funny">Fun</option>
+                <option value="Events">Social</option>
+                <option value="Educational">Educational</option>
               </select>
-              <label htmlFor="course" className="text-muted">
-                Course Enrolled:
+              <label htmlFor="category" className="text-muted">
+                Category:
               </label>
             </div>
           </div>
-          <div className="col-md-6">
-            <div className="form-floating mb-3">
-              <select
-                id="gender"
-                className="form-select rounded"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Non-binary">Non-binary</option>
-                <option value="Prefer not to say">Prefer not to say</option>
-              </select>
-              <label htmlFor="gender" className="text-muted">
-                Gender:
-              </label>
-            </div>
-          </div>
-          <div className="col-12">
-            <button className="btn btn-dark w-100 rounded" type="submit">
-              Update Profile
-            </button>
-          </div>
-          <div className="mt-3 text-center">
-            <p>Want to cancel? <Link to="/myprofile">Go back to profile</Link></p>
-          </div>
+          {imageUrl && (
+              <div className="mb-3">
+                <img src = {`data:image/png;base64,${imageUrl}`} alt="Fun-Time" className="img-fluid" />
+              </div>
+            )}
         </div>
+        <button className="btn btn-dark w-100 rounded" type="submit">
+          Update Fun-Time
+        </button>
       </form>
     </div>
   );
 }
-
-export default UpdateProfile;
