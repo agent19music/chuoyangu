@@ -46,9 +46,9 @@ def get_specific_event(event_id):
         'title': event.title, 
         'poster': base64.b64encode(event.image_data).decode() if event.image_data else None,
         'description': event.description, 
-        'start_time': event.start_time, 
-        'end_time': event.end_time, 
-        'date': event.date_of_event.strftime('%d %b %Y'),
+        'start_time': event.start_time.strftime('%H:%M') if event.start_time else None,
+        'end_time': event.end_time.strftime('%H:%M') if event.end_time else None,
+        'date': event.date_of_event.strftime('%Y-%m-%d') if event.date_of_event else None,
         'entry_fee': event.entry_fee,
         'category': event.category,
         'comments': [{
@@ -61,6 +61,7 @@ def get_specific_event(event_id):
     }
     
     return jsonify(output)
+
 
 @event_bp.route('/add-event', methods=['POST'])
 @jwt_required()
