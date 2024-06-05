@@ -120,12 +120,14 @@ def update_profile():
         user.email = data.get('email', user.email)
         user.phone_no = data.get('phone_no', user.phone_no)
         user.category = data.get('category', user.category)
-        user.image_data = data.get('image_data', user.image_data)
         user.gender = data.get('gender', user.gender)
+        if 'image_data' in data:
+            user.image_data = data['image_data']
         db.session.commit()
         return jsonify({'message': 'Profile updated successfully'})
     else:
         return jsonify(message="User not found"), 404
+
 
 # Delete user
 @user_bp.route("/deleteuser", methods=["DELETE"])
