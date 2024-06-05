@@ -114,13 +114,20 @@ def update_fun_time(fun_time_id):
     current_user = get_jwt_identity()
     fun_time = Fun_times.query.filter_by(id=fun_time_id, user_id=current_user).first()
     if not fun_time:
-        return jsonify({'message': 'Fun-Time not found or you are not authorized to update this Fun-Time'}), 404
+        return jsonify({'message': 'Fun time not found or you are not authorized to update this fun time'}), 404
+
     data = request.get_json()
+    
     fun_time.description = data.get('description', fun_time.description)
     fun_time.category = data.get('category', fun_time.category)
-    fun_time.image_data = data.get('image_data', fun_time.image_data)
+
+    image_data = data.get('image_data')
+    if image_data:
+        fun_time.image_data = base64.b64decode(image_data)
+    
     db.session.commit()
-    return jsonify({'message': 'Fun-Time updated successfully'})
+    return jsonify({'message': 'Fun time updated successfully'})
+
 
 @funtime_bp.route('/delete-fun_time/<int:fun_time_id>', methods=['DELETE'])
 @jwt_required()

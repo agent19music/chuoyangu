@@ -17,7 +17,7 @@ export default function UpdateFuntime() {
   useEffect(() => {
     const fetchFuntimeData = async () => {
       try {
-        const response = await fetch(`${apiEndpoint}/get-fun_time/${funtimeId}`, {
+        const response = await fetch(`${apiEndpoint}/fun_time/${funtimeId}`, {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
