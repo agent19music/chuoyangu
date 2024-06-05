@@ -13,10 +13,11 @@ function MyProfile() {
                             <div className="user-info-picture mb-4">
                                 {/* Added alt prop */}
                                 <img
-                                    className="img-fluid rounded-circle"
-                                    src={currentUser.image_url || "/default-pfp.jpg"}
-                                    alt={currentUser.username ? `${currentUser.username}'s Profile Picture` : "Profile Picture"}
-                                />
+                            className="img-fluid rounded-circle"
+                            src={`data:image/jpeg;base64,${currentUser.image_data}`}
+                            alt={currentUser.username ? `${currentUser.username}'s Profile Picture` : "Profile Picture"}
+                        />
+
                             </div>
                             <h4 className="mb-4">My INFO:</h4>
                             <div className="user-info-details mb-3">
