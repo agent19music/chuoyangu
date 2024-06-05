@@ -36,7 +36,7 @@ def authenticated_user():
 
     if user:
         # Encoding binary image data to base64 string for JSON serialization
-        image_data_base64 = base64.b64encode(user.image_data).decode('utf-8') if user.image_data else None
+        # image_data_base64 = base64.b64encode(user.image_data).decode('utf-8') if user.image_data else None
         
         user_data = {
             'id': user.id,
