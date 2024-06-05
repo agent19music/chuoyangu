@@ -103,7 +103,7 @@ const Review = ({ productid }) => {
         reviews.map(({ userImage, username, text, rating }) => (
           <div className="d-flex align-items-start flex-column my-2" key={username}>
             {userImage ? (
-              <img src={userImage} alt="User" className="rounded-circle mr-2" style={{ width: '2rem', height: '2rem' }} />
+              <img src={`data:image/jpeg;base64,${userImage}`} alt="User" className="rounded-circle mr-2" style={{ width: '2rem', height: '2rem' }} />
             ) : (
               <i className="fas fa-user"></i>
             )}
