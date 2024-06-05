@@ -12,11 +12,16 @@ function MyProfile() {
                         <div className="card-body text-center">
                             <div className="user-info-picture mb-4">
                                 {/* Added alt prop */}
-                                <img
+                                {/* <img
                             className="img-fluid rounded-circle"
                             src={`data:image/jpeg;base64,${currentUser.image_data}`}
                             alt={currentUser.username ? `${currentUser.username}'s Profile Picture` : "Profile Picture"}
-                        />
+                        /> */}
+                        {currentUser.image_data ? (
+            <img src={`data:image/jpeg;base64,${currentUser.image_data}`} alt="User" className="img-fluid rounded-circle"  />
+          ) : (
+            <img src='/default-pfp.jpg'/>
+          )}
 
                             </div>
                             <h4 className="mb-4">My INFO:</h4>
