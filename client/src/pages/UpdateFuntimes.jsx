@@ -1,18 +1,17 @@
-import  { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Swal from 'sweetalert2';
 import { UserContext } from '../context/UserContext';
 import { useParams, useNavigate } from 'react-router-dom';
 
 export default function UpdateFuntime() {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
   const { authToken, apiEndpoint } = useContext(UserContext);
   const { funtimeId } = useParams();
 
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [imageData, setImageData] = useState(null);
   const [category, setCategory] = useState('');
-
-  
 
   useEffect(() => {
     const fetchFuntimeData = async () => {
@@ -23,24 +22,30 @@ export default function UpdateFuntime() {
           },
         });
         if (response.ok) {
-          console.log(response.json());
           const funtimeData = await response.json();
-          console.log(funtimeData.output);
-          setDescription(funtimeData.output.description || '');
-          setImageUrl(funtimeData.output.image_url || '');
-          setCategory(funtimeData.output.category || '');
+          setDescription(funtimeData.description || '');
+          setImageUrl(funtimeData.image_url || '');
+          setCategory(funtimeData.category || '');
         } else {
           throw new Error('Failed to fetch funtime data');
         }
       } catch (error) {
         console.error('Error fetching funtime data:', error);
-
       }
     };
-  
+
     fetchFuntimeData();
   }, [funtimeId, apiEndpoint, authToken]);
-  
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImageData(reader.result.split(',')[1]);
+      setImageUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -51,14 +56,14 @@ export default function UpdateFuntime() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ description, image_url: imageUrl, category }),
+        body: JSON.stringify({ description, image_data: imageData, category }),
       });
       if (response.ok) {
         Swal.fire({
           icon: 'success',
           title: 'Funtime updated successfully!',
         });
-        navigate('/myprofile/myfuntimes')
+        navigate('/myprofile/myfuntimes');
       } else {
         throw new Error('Failed to update funtime');
       }
@@ -90,15 +95,13 @@ export default function UpdateFuntime() {
           <div className="col-md-6">
             <div className="form-floating mb-3">
               <input
-                type="text"
-                id="imageUrl"
+                type="file"
+                id="imageFile"
                 className="form-control"
-                placeholder="Enter image URL"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
+                onChange={handleImageChange}
               />
-              <label htmlFor="imageUrl" className="text-muted">
-                Image URL:
+              <label htmlFor="imageFile" className="text-muted">
+                Select Image:
               </label>
             </div>
           </div>
@@ -120,6 +123,11 @@ export default function UpdateFuntime() {
               </label>
             </div>
           </div>
+          {imageUrl && (
+              <div className="mb-3">
+                <img src = {`data:image/png;base64,${imageUrl}`} alt="Fun-Time" className="img-fluid" />
+              </div>
+            )}
         </div>
         <button className="btn btn-dark w-100 rounded" type="submit">
           Update Fun-Time
