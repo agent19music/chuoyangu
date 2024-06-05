@@ -28,7 +28,7 @@ def get_marketplace():
                 'text': review.text,
                 'rating': review.rating,
                 'username': review.user.username,  # Get the username of the user who posted the review
-                'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')  # Get the image data of the user who posted the review
+                'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')if review.user.image_data else None # Get the image data of the user who posted the review
             }
             reviews.append(review_data)
         
@@ -72,7 +72,7 @@ def get_product(product_id):
             'text': review.text,
             'rating': review.rating,
             'username': review.user.username,  # Get the username of the user who posted the review
-            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')  # Get the image data of the user who posted the review
+            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')if review.user.image_data else None  # Get the image data of the user who posted the review
         }
         reviews.append(review_data)
     
@@ -114,7 +114,7 @@ def get_my_products():
                 'text': review.text,
                 'rating': review.rating,
                 'username': review.user.username,  # Get the username of the user who posted the review
-                'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')  # Get the image data of the user who posted the review
+                'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')if review.user.image_data else None  # Get the image data of the user who posted the review
             }
             reviews.append(review_data)
         
@@ -227,7 +227,7 @@ def get_products_by_category(category):
             'text': review.text,
             'rating': review.rating,
             'username': review.user.username,
-            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')
+            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')if review.user.image_data else None
         } for review in product.reviews]
 
         # Determine the contact information for the product
@@ -288,7 +288,7 @@ def search_products():
             'text': review.text,
             'rating': review.rating,
             'username': review.user.username,
-            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')
+            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')if review.user.image_data else None
         } for review in product.reviews]
 
         # Determine the contact information for the product
@@ -419,7 +419,7 @@ def get_reviews(product_id):
                 'text': review.text,
                 'rating': review.rating,
                 'username': user.username,
-                'userImage':  base64.b64encode(review.user.image_data).decode('utf-8')
+                'userImage':  base64.b64encode(review.user.image_data).decode('utf-8')if review.user.image_data else None
             }
             reviews.append(review_data)
 
