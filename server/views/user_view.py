@@ -58,7 +58,7 @@ def get_all_users():
                 'username': user.username,
                 'phone_no': user.phone_no,
                 'category': user.category,
-                'image_data': user.image_data,
+                'image_data': base64.b64encode(user.image_data).decode('utf-8')if user.image_data else None,
                 'gender': user.gender
             })
         return jsonify({'users': all_users})
@@ -78,7 +78,7 @@ def get_user(user_id):
             'username': user.username,
             'phone_no': user.phone_no,
             'category': user.category,
-            'image_data': user.image_data,
+            'image_data': base64.b64encode(user.image_data).decode('utf-8')if user.image_data else None,
             'gender': user.gender
         }})
     else:
@@ -100,7 +100,7 @@ def get_profile():
             'email': user.email,
             'phone_no': user.phone_no,
             'category': user.category,
-            'image_data': user.image_data,
+            'image_data': base64.b64encode(user.image_data).decode('utf-8')if user.image_data else None,
             'gender': user.gender
         }
         return jsonify(user_data), 200
