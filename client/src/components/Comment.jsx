@@ -48,7 +48,7 @@ export default function Comment({comments}) {
       return (
         <div key={dateCreated} className="d-flex align-items-start flex-column my-2" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', borderRadius: '15px', boxShadow: '0px 0px 10px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
           {image ? (
-            <img src={image} alt="User" className="rounded-circle mr-2" style={{ width: '2rem', height: '2rem' }} />
+            <img src={`data:image/jpeg;base64,${image}`} alt="User" className="rounded-circle mr-2" style={{ width: '2rem', height: '2rem' }} />
           ) : (
             <i className="fas fa-user"></i>
           )}
