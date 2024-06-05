@@ -419,7 +419,7 @@ def get_reviews(product_id):
                 'text': review.text,
                 'rating': review.rating,
                 'username': user.username,
-                'userImage': user.image_url
+                'userImage':  base64.b64encode(review.user.image_data).decode('utf-8')
             }
             reviews.append(review_data)
 
