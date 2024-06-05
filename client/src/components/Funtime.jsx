@@ -28,7 +28,7 @@ export default function Funtime() {
 
       setFuntimes((prevFuntimes) => {
         return prevFuntimes.map((funTime) => {
-          if (funTime.id === funtimeId) {
+          if (funTime.funtimeId === funtimeId) {
             return {
               ...funTime,
               total_likes: data.like_count,
@@ -95,22 +95,24 @@ export default function Funtime() {
     <div id='event-holder' className="bg-light overflow-auto">
       <h4>FUNTIMES</h4>
       <div className="mx-auto">
-        {funtimes && funtimes.map((event, index) => (
+        {funtimes && funtimes.map((funtime, index) => (
           <FuntimeCard
             key={index}
             index={index}
-            {...event}
-            funtimeId={event.funtimeId}
+            {...funtime}
+            funtimeId={funtime.funtimeId}
             userId={currentUser.id}
             handleLike={handleLike}
             handleSubmit={handleSubmit}
-            
+            user_image={funtime.user.image}
+            username={funtime.user.username}
           />
         ))}
       </div>
     </div>
   );
 }
+
 
 const FuntimeCard = ({
   index,
@@ -119,12 +121,11 @@ const FuntimeCard = ({
   total_likes,
   category,
   username,
-  // liked,
+  user_image,
   comments,
   handleLike,
   handleSubmit,
   funtimeId,
-  // userId,
 }) => {
   const [localCommentText, setLocalCommentText] = useState('');
 
@@ -132,7 +133,15 @@ const FuntimeCard = ({
     <div className="card my-4">
       <div className="row no-gutters">
         <div className="col-md-4">
-          <i className="fas fa-user fa-fw me-3"></i> User: {username}
+          <div className="d-flex align-items-center">
+          {user_image ? (
+              <img src={`data:image/jpeg;base64,${user_image}`} alt="" className="rounded-circle m-3" style={{ width: '3rem', height: '3rem' }} />
+            ) : (
+              <i className="fas fa-user-circle fa-3x"></i>
+            )}
+            <span>{username}</span>
+          </div>
+          
           <img src={`data:image/jpeg;base64,${image_url}`} alt="" className="img-fluid" />
         </div>
         <div className="col-md-4 mx-auto">
@@ -140,7 +149,7 @@ const FuntimeCard = ({
             <h5 className="h3 font-weight-bold">{description}</h5>
             <div className="d-flex justify-content-between align-items-center mt-2">
               <span className="text-muted">
-                <i className="far fa-heart" onClick={() => handleLike(index)} style={{ cursor: 'pointer' }}></i> Likes: {total_likes}
+                <i className="far fa-heart" onClick={() => handleLike(funtimeId)} style={{ cursor: 'pointer' }}></i> Likes: {total_likes}
               </span>
               <span className="text-muted">
                 <i className="fas fa-list"></i> Category: {category}
@@ -201,7 +210,7 @@ FuntimeCard.propTypes = {
   total_likes: PropTypes.number.isRequired,
   category: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
-  liked: PropTypes.bool.isRequired,
+  user_image: PropTypes.string,
   comments: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
@@ -213,7 +222,6 @@ FuntimeCard.propTypes = {
   handleLike: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   funtimeId: PropTypes.number.isRequired,
-  userId: PropTypes.number.isRequired,
 };
 
 Funtime.propTypes = {
@@ -230,6 +238,7 @@ Funtime.propTypes = {
       total_likes: PropTypes.number,
       category: PropTypes.string,
       username: PropTypes.string,
+      user_image: PropTypes.string,
       liked: PropTypes.bool,
       comments: PropTypes.arrayOf(
         PropTypes.shape({
