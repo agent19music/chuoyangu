@@ -12,7 +12,8 @@ function UpdateProfile() {
   // Initialize state with current user data
   const [email, setEmail] = useState(currentUser.email || '');
   const [username, setUsername] = useState(currentUser.username || '');
-  const [imageUrl, setImageUrl] = useState(currentUser.image_url || ''); 
+  const [imageUrl, setImageUrl] = useState(currentUser.image_url || '/default-pfp.jpg'); 
+  const [imageData, setImageData] = useState(null);
   const [phoneNo, setPhoneNo] = useState(currentUser.phone_no || ''); 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -20,11 +21,8 @@ function UpdateProfile() {
   const [lastName, setLastName] = useState(currentUser.last_name || '');
   const [course, setCourse] = useState(currentUser.course || '');
   const [gender, setGender] = useState(currentUser.gender || '');
- 
-
 
   useEffect(() => {
-    
     // Update state when currentUser changes
     setEmail(currentUser.email || '');
     setUsername(currentUser.username || '');
@@ -32,9 +30,19 @@ function UpdateProfile() {
     setLastName(currentUser.last_name || '');
     setCourse(currentUser.course || '');
     setGender(currentUser.gender || '');
-    setImageUrl(currentUser.image_url || ''); 
+    setImageUrl(currentUser.image_url || '/default-pfp.jpg');
     setPhoneNo(currentUser.phone_no || '');
   }, [currentUser]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImageData(reader.result.split(',')[1]);
+      setImageUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const updateUser = async (e) => {
     e.preventDefault();
@@ -62,7 +70,7 @@ function UpdateProfile() {
           last_name: lastName,
           category: course,
           gender,
-          image_url: imageUrl, 
+          image_data: imageData, 
           phone_no: phoneNo
         })
       });
@@ -100,10 +108,21 @@ function UpdateProfile() {
     }
   };
 
-
   return (
     <div id='form' className="container py-5">
       <h1 className="text-center mb-4">Update Profile</h1>
+      <div className="text-center mb-4">
+        <img src={imageUrl} alt="Profile" className="img-fluid rounded-circle" style={{ width: '150px', height: '150px' }} />
+        <div className="form-floating mt-3">
+          <input
+            type="file"
+            id="imageFile"
+            className="form-control"
+            onChange={handleImageChange}
+          />
+          <label htmlFor="imageFile" className="text-muted">Select Profile Image:</label>
+        </div>
+      </div>
       <form onSubmit={updateUser}>
         <div className="row g-4">
           <div className="col-md-6">
@@ -193,21 +212,6 @@ function UpdateProfile() {
               />
               <label htmlFor="confirmPassword" className="text-muted">
                 Confirm New Password:
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                id="imageUrl"
-                className="form-control"
-                placeholder="Enter your image URL"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-              />
-              <label htmlFor="imageUrl" className="text-muted">
-                Image URL:
               </label>
             </div>
           </div>

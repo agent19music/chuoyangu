@@ -28,7 +28,7 @@ def get_marketplace():
                 'text': review.text,
                 'rating': review.rating,
                 'username': review.user.username,  # Get the username of the user who posted the review
-                'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')  # Get the image data of the user who posted the review
+                'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')if review.user.image_data else None # Get the image data of the user who posted the review
             }
             reviews.append(review_data)
         
@@ -72,7 +72,7 @@ def get_product(product_id):
             'text': review.text,
             'rating': review.rating,
             'username': review.user.username,  # Get the username of the user who posted the review
-            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')  # Get the image data of the user who posted the review
+            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')if review.user.image_data else None  # Get the image data of the user who posted the review
         }
         reviews.append(review_data)
     
@@ -114,7 +114,7 @@ def get_my_products():
                 'text': review.text,
                 'rating': review.rating,
                 'username': review.user.username,  # Get the username of the user who posted the review
-                'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')  # Get the image data of the user who posted the review
+                'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')if review.user.image_data else None  # Get the image data of the user who posted the review
             }
             reviews.append(review_data)
         
@@ -227,7 +227,7 @@ def get_products_by_category(category):
             'text': review.text,
             'rating': review.rating,
             'username': review.user.username,
-            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')
+            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')if review.user.image_data else None
         } for review in product.reviews]
 
         # Determine the contact information for the product
@@ -288,7 +288,7 @@ def search_products():
             'text': review.text,
             'rating': review.rating,
             'username': review.user.username,
-            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')
+            'user_image_data':  base64.b64encode(review.user.image_data).decode('utf-8')if review.user.image_data else None
         } for review in product.reviews]
 
         # Determine the contact information for the product
@@ -312,3 +312,117 @@ def search_products():
         output.append(product_data)
 
     return jsonify({'products': output})
+
+# Route to add a review and rating
+@marketplace_bp.route('/product/<int:product_id>/review', methods=['POST'])
+@jwt_required()
+def add_review(product_id):
+    current_user = get_jwt_identity()
+    product = Products.query.get(product_id)
+    
+    if not product:
+        return jsonify({'message': 'Product not found'}), 404
+    
+    data = request.get_json()
+    review_text = data.get('text')
+    rating = int(data.get('rating'))
+    
+    if not review_text:
+        return jsonify({'message': 'Review text is required'}), 400
+    if not rating:
+        return jsonify({'message': 'Rating is required'}), 400
+    # If rating is not between 0-5 return error: rating should be between 0 and 5
+    if rating < 0 or rating > 5:
+        return jsonify({'message': 'Rating should be between 0 and 5'}), 400
+
+  
+    new_review = Reviews(
+        text=review_text,
+        rating=rating,
+        user_id=current_user,
+        product_id=product_id
+    )
+    
+    db.session.add(new_review)
+    db.session.commit()
+    
+    # Return the details of the newly added review in the response
+    review_details = {
+        'id': new_review.id,
+        'text': new_review.text,
+        'rating': new_review.rating,
+        'user_id': new_review.user_id,
+        'product_id': new_review.product_id
+    }
+    
+    return jsonify({'message': 'Review added successfully', 'review': review_details}), 201
+
+
+# Route to update a review
+@marketplace_bp.route('/review/<int:review_id>', methods=['PUT'])
+@jwt_required()
+def update_review(review_id):
+    current_user = get_jwt_identity()
+    review = Reviews.query.get(review_id)
+
+    if not review:
+        return jsonify({'message': 'Review not found'}), 404
+
+    if review.user_id != current_user:
+        return jsonify({'message': 'Unauthorized to update this review'}), 403
+
+    data = request.get_json()
+    text = data.get('text')
+    rating = data.get('rating')
+
+    if not text:
+        return jsonify({'message': 'Review text is required'}), 400
+    if not rating:
+        return jsonify({'message': 'Rating is required'}), 400
+
+    review.text = text
+    review.rating = rating
+    db.session.commit()
+
+    return jsonify({'message': 'Review updated successfully'}), 200
+
+
+# Route to delete a review
+@marketplace_bp.route('/review/<int:review_id>', methods=['DELETE'])
+@jwt_required()
+def delete_review(review_id):
+    current_user = get_jwt_identity()
+    review = Reviews.query.get(review_id)
+
+    if not review:
+        return jsonify({'message': 'Review not found'}), 404
+
+    if review.user_id != current_user:
+        return jsonify({'message': 'Unauthorized to delete this review'}), 403
+
+    db.session.delete(review)
+    db.session.commit()
+    return jsonify({'message': 'Review deleted successfully'}), 200
+
+@marketplace_bp.route('/product/<int:product_id>/reviews', methods=['GET'])
+def get_reviews(product_id):
+    product = Products.query.get(product_id)
+    if not product:
+        return jsonify({'message': 'Product not found'}), 404
+
+    reviews = []
+    for review in product.reviews:
+        user = Users.query.get(review.user_id)
+        if user:
+            review_data = {
+                'id': review.id,
+                'text': review.text,
+                'rating': review.rating,
+                'username': user.username,
+                'userImage':  base64.b64encode(review.user.image_data).decode('utf-8')if review.user.image_data else None
+            }
+            reviews.append(review_data)
+
+    return jsonify({'reviews': reviews})
+
+

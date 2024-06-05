@@ -46,9 +46,9 @@ def get_specific_event(event_id):
         'title': event.title, 
         'poster': base64.b64encode(event.image_data).decode() if event.image_data else None,
         'description': event.description, 
-        'start_time': event.start_time, 
-        'end_time': event.end_time, 
-        'date': event.date_of_event.strftime('%d %b %Y'),
+        'start_time': event.start_time.strftime('%H:%M') if event.start_time else None,
+        'end_time': event.end_time.strftime('%H:%M') if event.end_time else None,
+        'date': event.date_of_event.strftime('%Y-%m-%d') if event.date_of_event else None,
         'entry_fee': event.entry_fee,
         'category': event.category,
         'comments': [{
@@ -61,6 +61,7 @@ def get_specific_event(event_id):
     }
     
     return jsonify(output)
+
 
 @event_bp.route('/add-event', methods=['POST'])
 @jwt_required()
@@ -133,15 +134,15 @@ def update_event(event_id):
 
     # Parse date string into datetime object if provided
     if 'date_of_event' in data:
-        event.date_of_event = datetime.strptime(data['date_of_event'], '%d %b %Y')
+        event.date_of_event = datetime.strptime(data['date_of_event'], '%Y-%m-%d')
 
     # Parse start time string into time object if provided
     if 'start_time' in data:
-        start_time = datetime.strptime(data['start_time'], '%I:%M %p').time()
+        start_time = datetime.strptime(data['start_time'], '%H:%M').time()
 
     # Parse end time string into time object if provided
     if 'end_time' in data:
-        end_time = datetime.strptime(data['end_time'], '%I:%M %p').time()
+        end_time = datetime.strptime(data['end_time'], '%H:%M').time()
 
     # Combine date_of_event with start_time and end_time to create datetime objects
     if 'date_of_event' in data and 'start_time' in data:
@@ -154,7 +155,7 @@ def update_event(event_id):
     event.title = data.get('title', event.title)
     event.description = data.get('description', event.description)
     event.category = data.get('category', event.category)
-    event.Entry_fee = data.get('Entry_fee', event.Entry_fee)
+    event.entry_fee = data.get('entry_fee', event.entry_fee)
 
     # Decode and update the image data from base64 if provided
     image_data = data.get('image_data')

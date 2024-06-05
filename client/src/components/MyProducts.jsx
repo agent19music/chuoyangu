@@ -78,7 +78,7 @@ const MyProducts = () => {
                 <div className="row no-gutters">
                   <div className="col-md-4">
                     <h5>{product.title}</h5>
-                    <img src={product.image_url} alt={product.title} className="img-fluid" />
+                    <img src={`data:image/png;base64,${product.image_url}`} alt={product.title} className="img-fluid" />
                   </div>
                   <div className="col-md-8">
                     <div className="card-body">

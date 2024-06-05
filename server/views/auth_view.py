@@ -43,7 +43,7 @@ def authenticated_user():
             'username': user.username,
             'email': user.email,
             'category': user.category,
-            'image_data': image_data_base64,
+            'image_data': base64.b64encode(user.image_data).decode('utf-8')if user.image_data else None,
             'phone_no': user.phone_no,
             'first_name': user.first_name,
             'last_name': user.last_name,
