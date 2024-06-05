@@ -34,6 +34,31 @@ def get_fun_times():
     
     return make_response(jsonify(output), 200)
 
+@funtime_bp.route('/fun_time/<int:fun_time_id>', methods=['GET'])
+def get_specific_fun_time(fun_time_id):
+    fun_time = Fun_times.query.get(fun_time_id)
+    if not fun_time:
+        return jsonify({'message': 'Fun time not found'}), 404
+    
+    total_likes = db.session.query(func.count(Likes.id)).filter(Likes.fun_time_id == fun_time.id).scalar()
+    fun_time_data = {
+        'funtimeId': fun_time.id,
+        'description': fun_time.description,
+        'image_url': base64.b64encode(fun_time.image_data).decode() if fun_time.image_data else None,
+        'category': fun_time.category,
+        'total_likes': total_likes,
+        'comments': [{
+            'id': comment.id,
+            'text': comment.text,
+            'username': comment.user.username,
+            'image': base64.b64encode(comment.user.image_data).decode() if comment.user.image_data else None,
+            'dateCreated': comment.created_at,
+            'updated_at': comment.updated_at
+        } for comment in fun_time.comments]
+    }
+
+    return jsonify(fun_time_data)
+
 @funtime_bp.route('/user-fun_times', methods=['GET'])
 @jwt_required()
 def get_user_fun_times():
