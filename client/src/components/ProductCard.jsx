@@ -9,7 +9,7 @@ const ProductCard = ({ title, description, average_rating, image_url, id, contac
     <div className="card my-4">
       <div className="row no-gutters">
         <div className="col-md-4">
-          <img src={image_url} alt="" className="img-fluid" />
+        <img src={`data:image/jpeg;base64,${image_url}`} alt="" className="img-fluid" />
         </div>
         <div className="col-md-4 mx-auto">
           <div className="card-body">
