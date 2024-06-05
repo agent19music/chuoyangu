@@ -50,7 +50,7 @@ export default function Comment({comments}) {
           {image ? (
             <img src={image} alt="User" className="rounded-circle mr-2" style={{ width: '2rem', height: '2rem' }} />
           ) : (
-            <i class="fas fa-user"></i>
+            <i className="fas fa-user"></i>
           )}
           <small className="text-muted">{username}</small>
           <p className="mb-0 text-black" style={{ textAlign: 'center' }}>{text}</p>

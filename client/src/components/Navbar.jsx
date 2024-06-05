@@ -49,7 +49,7 @@ const Navbar = () => {
                 data-mdb-toggle="dropdown"
                 aria-expanded="false"
               >
-                <img src={currentUser.image_url|| '/default-pfp.jpg'} alt='p' className="rounded-circle mr-2" style={{ width: '3rem', height: '3rem' }}/>
+                <img src={`data:image/png;base64,${currentUser.image_data}`} alt='p' className="rounded-circle mr-2" style={{ width: '3rem', height: '3rem' }}/>
               </Link>
               
               <ul
