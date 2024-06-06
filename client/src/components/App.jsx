@@ -14,11 +14,6 @@ import ResetPassword from '../pages/ResetPassword';
 import ViewProfile from '../pages/ViewProfile'
 import AddEvent from '../pages/AddEvent'
 import UserProvider, { UserContext } from '../context/UserContext';
-import ComingSoonEventsPage from '../pages/ComingSoonEventsPage';
-import FunEventsPage from '../pages/FunEventsPage';
-import EducationalEventsPage from '../pages/EducationalEventsPage';
-import SocialEventsPage from '../pages/SocialEventsPage';
-import PastEventsPage from '../pages/PastEventsPage';
 import UpdateProfile from '../pages/UpdateProfile';
 import TechMarketplacePage from '../pages/TechMarketplacePage';
 import FoodMarketplacePage from '../pages/FoodMarketplacePage';
@@ -87,7 +82,8 @@ function ProtectedRoutes() {
       <Routes>
         <Route path="/" element={<Funtimes />} />
         <Route path="marketplace" element={<Marketplace />} />
-        <Route path="events" element={<EventsPage />} />
+        <Route exact path="events" element={<EventsPage/>} />
+        {/* <Route path="events/:category" element={<EventsPage/>} /> */}
         <Route path="addproduct" element={<AddProduct />} />
         <Route path="updateproduct/:id" element={<UpdateProduct />} />
         <Route path="studentpage" element={<StudentPage />} />
@@ -95,11 +91,6 @@ function ProtectedRoutes() {
         <Route path="myprofile" element={<ViewProfile />} />
         <Route path="addevent" element={<AddEvent />} />
         <Route path="addfuntime" element={<AddFunTime />} />
-        <Route path="events/comingsoon" element={<ComingSoonEventsPage />} />
-        <Route path="events/fun" element={<FunEventsPage />} />
-        <Route path="events/educational" element={<EducationalEventsPage />} />
-        <Route path="events/social" element={<SocialEventsPage />} />
-        <Route path="events/past" element={<PastEventsPage />} />
         <Route path="updateprofile" element={<UpdateProfile />} />
         <Route path="marketplace/tech" element={<TechMarketplacePage/>} />
         <Route path="marketplace/food" element={<FoodMarketplacePage/>} />

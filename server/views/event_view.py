@@ -241,3 +241,44 @@ def delete_comment(comment_id):
     db.session.commit()
     
     return jsonify({'message': 'Comment deleted successfully'})
+
+def get_events_by_category(category):
+    events = Events.query.filter_by(category=category).all()
+    
+    output = []
+    for event in events:
+        event_data = {
+            'eventId': event.id,
+        'title': event.title,
+        'description': event.description,
+        'poster': base64.b64encode(event.image_data).decode() if event.image_data else None,
+        'start_time': event.start_time,
+        'end_time': event.end_time,
+        'date': event.date_of_event.strftime('%d %b %Y'),
+        'entry_fee': event.entry_fee,
+        'category': event.category,
+        'comments': [{
+            'id': comment.id,
+            'text': comment.text,
+            'image': base64.b64encode(comment.user.image_data).decode() if comment.user.image_data else None,
+            'username': comment.user.username,
+            'dateCreated': comment.created_at
+        } for comment in event.comments]
+        }
+        output.append(event_data)
+    
+    return jsonify({'events': output})
+
+@event_bp.route('/events/fun', methods=['GET'])
+def get_funny_events():
+    return get_events_by_category('Fun')
+
+# Route to get educational events
+@event_bp.route('/events/educational', methods=['GET'])
+def get_educational_events():
+    return get_events_by_category('Educational')
+
+# Route to get social events
+@event_bp.route('/events/social', methods=['GET'])
+def get_events_events():
+    return get_events_by_category('Social')
