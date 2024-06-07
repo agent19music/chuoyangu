@@ -19,7 +19,7 @@ const {students, setCategory} = useContext(StudentContext)
               <button to="/users/category/software_dev"  onClick={() => setCategory('Software Engineering')}className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2" aria-current="true">
               <i className="far fa-face-laugh-beam fa-fw me-3"></i><span>SoftwareDev</span>
             </button>
-            <button to="/users/category/cybersec"  onClick={() => setCategory('Cybersecurity')}className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
+            <button to="/users/category/cybersec"  onClick={() => setCategory('Cybersec')}className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
               <i className="fas fa-calendar-days fa-fw me-3"></i><span>CyberSec</span>
             </button>
             <button to="/users/category/data_science"  onClick={() => setCategory('Data Science')} className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
