@@ -1,56 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { UserContext } from '../context/UserContext';
+import {React,  useContext}  from 'react';
 import SideMenu from '../components/SideMenu';
-import {Link} from 'react-router-dom';
-
+import { StudentContext } from '../context/StudentContext';
 export default function StudentsPage() {
-  const [students, setStudents] = useState([]);
-  // const [selectedCourse, setSelectedCourse] = useState('');
-  const { apiEndpoint } = useContext(UserContext);
-
-  // const courses = ['UI/UX', 'Data Science', 'Software Dev', 'Cybersec']; // Updated course names
-
-   // Fetch data when component mounts
-
-   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${apiEndpoint}/users`);
-        setStudents(response.data.users);
-        // console.log(students); // Update state with fetched users data
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-  
-    fetchData();
-  }, [apiEndpoint]);
-  
-
-  // const filterStudentsByCourse = async (course) => {
-  //   try {
-  //     const response = await axios.get(`${apiEndpoint}/users/category/${course}`);
-  //     setStudents(response.data.users); // Update state with filtered users data
-  //     setSelectedCourse(course);
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error);
-  //   }
-  // };
-
-  // const addStudent = () => {
-  //   // Generating random student data for demonstration
-  //   const genders = ['men', 'women'];
-  //   const gender = genders[Math.floor(Math.random() * genders.length)];
-  //   const course = courses[Math.floor(Math.random() * courses.length)];
-  //   const newStudent = {
-  //     id: Math.floor(Math.random() * 1000) + 1,
-  //     name: `Student ${students.length + 1}`,
-  //     course: course,
-  //     photo: `https://randomuser.me/api/portraits/${gender}/${Math.floor(Math.random() * 100)}.jpg`,
-  //   };
-  //   setStudents(prevStudents => [...prevStudents, newStudent]);
-  // };
+ 
+const {students, setCategory} = useContext(StudentContext)
+ 
+ 
 
   return (
     <div className="d-flex flex-column flex-md-row align-items-start justify-content-between h-100">
@@ -61,18 +16,18 @@ export default function StudentsPage() {
           <div className="position-sticky">
             <div id="sidebarMenu" className="list-group list-group-flush mx-3 mt-4">
             <>
-              <Link to="/users/category/software_dev" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2" aria-current="true">
+              <button to="/users/category/software_dev"  onClick={() => setCategory('Software Engineering')}className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2" aria-current="true">
               <i className="far fa-face-laugh-beam fa-fw me-3"></i><span>SoftwareDev</span>
-            </Link>
-            <Link to="/users/category/cybersec" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
+            </button>
+            <button to="/users/category/cybersec"  onClick={() => setCategory('Cybersecurity')}className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
               <i className="fas fa-calendar-days fa-fw me-3"></i><span>CyberSec</span>
-            </Link>
-            <Link to="/users/category/data_science" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
+            </button>
+            <button to="/users/category/data_science"  onClick={() => setCategory('Data Science')} className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
               <i className="fas fa-book-open fa-fw me-3"></i><span>DataScience</span>
-            </Link>
-            <Link to="/users/category/ui_ux" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
+            </button>
+            <button to="/users/category/ui_ux"  onClick={() => setCategory('UI UX')} className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
               <i className="fas fa-fire fa-fw me-3"></i><span>UI_UX</span>
-            </Link>
+            </button>
               </>
               {/* <div className="mt-3">
                 <h5>Courses</h5>

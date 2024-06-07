@@ -10,6 +10,8 @@ const Event = () => {
   const { authToken, apiEndpoint } = useContext(UserContext);
   const { events, isLoading, setOnchange } = useContext(EventContext);
 
+  console.log(events);
+
   function handleSubmit(e, eventId, localCommentText) {
     e.preventDefault();
 

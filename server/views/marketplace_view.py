@@ -1,5 +1,5 @@
 from models import db, Products, Wishlists, Reviews, Users
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint,make_response
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import or_, func
@@ -49,7 +49,7 @@ def get_marketplace():
         }
         output.append(product_data)
     
-    return jsonify({'products': output})
+    return make_response(jsonify(output), 200)
 
 # Route to get a specific product by id
 @marketplace_bp.route('/product/<int:product_id>', methods=['GET'])
