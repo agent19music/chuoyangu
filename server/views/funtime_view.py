@@ -15,12 +15,17 @@ def get_fun_times():
     output = []
     for fun_time in fun_times:
         total_likes = db.session.query(func.count(Likes.id)).filter(Likes.fun_time_id == fun_time.id).scalar()
+        
         fun_time_data = {
             'funtimeId': fun_time.id,
             'description': fun_time.description,
             'image_url': base64.b64encode(fun_time.image_data).decode() if fun_time.image_data else None,
             'category': fun_time.category,
             'total_likes': total_likes,
+            'user': {
+                'username': fun_time.user.username,
+                'image': base64.b64encode(fun_time.user.image_data).decode() if fun_time.user.image_data else None,
+            },
             'comments': [{
                 'id': comment.id,
                 'text': comment.text,

@@ -1,43 +1,51 @@
-import React, { createContext, useEffect, useState } from "react";
-import PropTypes from 'prop-types';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 
 export const EventContext = createContext();
 
-export default function EventProvider({ children }) {
-  const apiEndpoint = "http://127.0.0.1:5000";
-  const [isLoading, setIsLoading] = useState(false);
+const EventProvider = ({ children }) => {
   const [events, setEvents] = useState([]);
-  const [onchange, setOnchange] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [onChange, setOnchange] = useState(false);
 
-  useEffect(() => {
+  const apiEndpoint = 'http://127.0.0.1:5000'; // Replace this with your actual API endpoint
+
+  const fetchAllEvents = useCallback(() => {
     setIsLoading(true);
     fetch(`${apiEndpoint}/events`)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         setEvents(data);
         setIsLoading(false);
       })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
+      .catch(err => {
+        console.error(err);
         setIsLoading(false);
       });
-  }, [onchange, apiEndpoint]);
+  }, [apiEndpoint]);
 
-  const contextData = {
-    apiEndpoint,
-    events,
-    isLoading,
-    onchange,
-    setOnchange
-  };
+  const fetchEventsByCategory = useCallback((category) => {
+    setIsLoading(true);
+    fetch(`${apiEndpoint}/${category}`)
+      .then(res => res.json())
+      .then(data => {
+        setEvents(data);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setIsLoading(false);
+      });
+  }, [apiEndpoint]);
+
+  useEffect(() => {
+    fetchAllEvents();
+  }, [fetchAllEvents, onChange]);
 
   return (
-    <EventContext.Provider value={contextData}>
+    <EventContext.Provider value={{ events, isLoading, setOnchange, fetchAllEvents, fetchEventsByCategory }}>
       {children}
     </EventContext.Provider>
   );
-}
-
-EventProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
+
+export default EventProvider;
