@@ -5,6 +5,10 @@ import SideMenu from '../components/SideMenu';
 
 export default function StudentsPage() {
   const [students, setStudents] = useState([]);
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [category, setCategory] = useState('Software Engineering'); // Default category
+
+
   // const [selectedCourse, setSelectedCourse] = useState('');
   const { apiEndpoint } = useContext(UserContext);
 
@@ -25,6 +29,15 @@ export default function StudentsPage() {
   
     fetchData();
   }, [apiEndpoint]);
+
+  useEffect(() => {
+    if (category) {
+      const filtered = students.filter(student => student.category === category);
+      setFilteredStudents(filtered);
+    } else {
+      setFilteredStudents(students);
+    }
+  }, [category, students]);
   
 
  
