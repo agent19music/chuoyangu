@@ -9,7 +9,7 @@ export default function FuntimeProvider({children}){
     const [isLoading, setIsLoading] = useState(false);
     const [onchange, setOnchange] = useState(false);
     const [funtimes, setFuntimes] = useState([]);
-    const [category, setCategory] = useState('Fun'); // Default category
+    const [category, setCategory] = useState('Funny'); // Default category
     const [filteredEvents, setFilteredEvents] = useState([]);
 
 
@@ -51,7 +51,8 @@ export default function FuntimeProvider({children}){
          funtimes: filteredEvents,
          setOnchange,
          setFuntimes,
-         isLoading
+         isLoading,
+         setCategory
     };
     
     

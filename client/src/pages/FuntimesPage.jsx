@@ -1,9 +1,11 @@
-import React from 'react'
+import {React, useContext} from 'react'
 import Funtime from '../components/Funtime'
 import SideMenu from '../components/SideMenu';
-import { Link } from 'react-router-dom';
+import { FuntimeContext } from '../context/FuntimeContext';
+
 
 export default function Funtimes() {
+  const { setCategory } = useContext(FuntimeContext);
   return (
     <div className="d-flex flex-column flex-md-row align-items-start justify-content-between h-100 ">      {/* Left section (15%, with sidenav on top) */}
 <div id='left-sidemenu' className="order-3 order-md-1 col-12 col-md-2 p-3 shadow-sm h-100 d-flex flex-column mt-5">        {/* Sidenav on top half */}
@@ -11,15 +13,15 @@ export default function Funtimes() {
   <div className="position-sticky">
     <div id="sidebarMenu"className="list-group list-group-flush mx-3 mt-4">
       {/* Your sidenav links here */}
-      <Link to="/funtimes/funny" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2" aria-current="true">
+      <button to="/funtimes/funny"  onClick={() => setCategory('Funny')} className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2" aria-current="true">
         <i className="far fa-face-laugh-beam fa-fw me-3"></i><span>Funny</span>
-      </Link>
-      <Link to="/funtimes/events" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
+      </button>
+      <button to="/funtimes/events"  onClick={() => setCategory('Events')} className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
         <i className="fas fa-calendar-days fa-fw me-3"></i><span>Events</span>
-      </Link>
-      <Link to="/funtimes/educational" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
+      </button>
+      <button to="/funtimes/educational"  onClick={() => setCategory('Educational')}className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
         <i className="fas fa-book-open fa-fw me-3"></i><span>Educational</span>
-      </Link>
+      </button>
 
     </div>
   </div>
