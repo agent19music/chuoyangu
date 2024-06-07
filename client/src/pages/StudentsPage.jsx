@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { UserContext } from '../context/UserContext';
 import SideMenu from '../components/SideMenu';
 import { StudentContext } from '../context/StudentContext';
 export default function StudentsPage() {
