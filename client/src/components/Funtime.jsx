@@ -137,7 +137,7 @@ const FuntimeCard = ({
           {user_image ? (
               <img src={`data:image/jpeg;base64,${user_image}`} alt="" className="rounded-circle m-3" style={{ width: '3rem', height: '3rem' }} />
             ) : (
-              <i className="fas fa-user-circle fa-3x"></i>
+              <img src={'/default-pfp.jpg'} alt="" className="rounded-circle m-3" style={{ width: '3rem', height: '3rem' }} />
             )}
             <span>{username}</span>
           </div>
