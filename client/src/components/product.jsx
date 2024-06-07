@@ -1,9 +1,7 @@
 import React, { useContext } from 'react';
 import '../App.css';
-import Swal from 'sweetalert2';
 import PropTypes from 'prop-types';
 import { MarketplaceContext } from '../context/MarketplaceContext';
-import { Link } from 'react-router-dom';
 import Review from './Review';
 
 const Product = () => {
