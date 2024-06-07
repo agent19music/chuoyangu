@@ -40,13 +40,12 @@ export default function StudentProvider({children}){
 
     const contextData = {
        apiEndpoint,
-       products: filteredStudents,
+       students: filteredStudents,
        isLoading,
        setCategory
          
     };
 
-    console.log(products);
     
         return (
             <StudentContext.Provider value={contextData}>

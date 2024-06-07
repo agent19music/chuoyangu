@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import {React,  useContext}  from 'react';
 import SideMenu from '../components/SideMenu';
 import { StudentContext } from '../context/StudentContext';
 export default function StudentsPage() {
