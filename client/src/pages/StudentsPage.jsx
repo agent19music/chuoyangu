@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../context/UserContext';
 import SideMenu from '../components/SideMenu';
+import { MarketplaceContext } from '../context/MarketplaceContext';
 
 export default function StudentsPage() {
   const [students, setStudents] = useState([]);
@@ -51,16 +52,16 @@ export default function StudentsPage() {
           <div className="position-sticky">
             <div id="sidebarMenu" className="list-group list-group-flush mx-3 mt-4">
             <>
-              <button to="/users/category/software_dev" className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2" aria-current="true">
+              <button to="/users/category/software_dev"  onClick={() => setCategory('Software Engineering')}className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2" aria-current="true">
               <i className="far fa-face-laugh-beam fa-fw me-3"></i><span>SoftwareDev</span>
             </button>
-            <button to="/users/category/cybersec" className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
+            <button to="/users/category/cybersec"  onClick={() => setCategory('Cybersecurity')}className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
               <i className="fas fa-calendar-days fa-fw me-3"></i><span>CyberSec</span>
             </button>
-            <button to="/users/category/data_science" className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
+            <button to="/users/category/data_science"  onClick={() => setCategory('Data Science')} className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
               <i className="fas fa-book-open fa-fw me-3"></i><span>DataScience</span>
             </button>
-            <button to="/users/category/ui_ux" className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
+            <button to="/users/category/ui_ux"  onClick={() => setCategory('UI UX')} className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
               <i className="fas fa-fire fa-fw me-3"></i><span>UI_UX</span>
             </button>
               </>
