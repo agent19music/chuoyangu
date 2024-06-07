@@ -59,16 +59,6 @@ const ProductCard = ({ title, description, average_rating, image_url, id, contac
           </div>
         </div>
       </div>
-      <div className='extra content'>
-        <Link to={`/updateproduct/${id}`}>
-          <button className="ui icon blue button">
-            <i className="edit icon"></i>
-          </button>
-        </Link>
-        <button className="ui icon red button" onClick={() => handleDeleteProduct(id)}>
-          <i className="trash icon"></i>
-        </button>
-      </div>
     </div>
   );
 };
