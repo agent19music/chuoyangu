@@ -1,5 +1,6 @@
 import { React, createContext, useState,useEffect} from "react";
 import PropTypes from 'prop-types'; // Add this line
+import axios from "axios";
 
 export const StudentContext = createContext();
 
@@ -9,25 +10,24 @@ export default function StudentProvider({children}){
     const [students, setStudents] = useState([])
     const [isLoading, setIsLoading] = useState(true);
     const [filteredStudents, setFilteredStudents] = useState([])
-    const [category, setCategory] = useState('Food'); // Default category
+    const [category, setCategory] = useState('Software Engineering'); // Default category
 
 
 
 
     useEffect(() => {
-        setIsLoading(true); // Ensure loading state is true before fetching
-        fetch(`${apiEndpoint}/marketplace`)
-            .then((res) => res.json())
-            .then((res) => {
-                setStudents(res);
-                setIsLoading(false); // Set loading to false after data is fetched
-            })
-            .catch((error) => {
-                console.error("Error fetching data: ", error);
-                setStudents([]);
-                setIsLoading(false); // Ensure loading is set to false even if there's an error
-            });
-    }, []);
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(`${apiEndpoint}/users`);
+            setStudents(response.data.users);
+            // console.log(students); // Update state with fetched users data
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+      
+        fetchData();
+      }, [apiEndpoint]);
 
     useEffect(() => {
         if (category) {

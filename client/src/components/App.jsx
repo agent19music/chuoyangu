@@ -15,11 +15,6 @@ import ViewProfile from '../pages/ViewProfile'
 import AddEvent from '../pages/AddEvent'
 import UserProvider, { UserContext } from '../context/UserContext';
 import UpdateProfile from '../pages/UpdateProfile';
-import TechMarketplacePage from '../pages/TechMarketplacePage';
-import FoodMarketplacePage from '../pages/FoodMarketplacePage';
-import AccessoriesMarketplacePage from '../pages/AccessoriesMarketplacePage';
-import ClothingMarketplacePage from '../pages/ClothingMarketplacePage';
-import ArtMarketplacePage from '../pages/ArtMarketplacePage';
 import MyEventsPage from '../pages/MyEventsPage';
 import StudentsDataScience from '../pages/StudentsDataScience';
 import StudentsSoftware from '../pages/StudentsSoftware';
@@ -34,6 +29,7 @@ import UpdateFuntime from '../pages/UpdateFuntimes';
 import MarketplaceProvider from '../context/MarketplaceContext';
 import FuntimeProvider from '../context/FuntimeContext';
 import EventProvider from '../context/EventContext';
+import StudentProvider from '../context/StudentContext';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -44,10 +40,12 @@ function App() {
 
   return (
     <BrowserRouter>
+     <UserProvider>
+   <StudentProvider>
 <EventProvider>
    <FuntimeProvider>
    <MarketplaceProvider>
-    <UserProvider>
+   
       <div className={darkMode ? 'dark-mode' : 'light-mode'}>
         <Routes>
         <Route path="/login" element={<LoginPage />} />
@@ -56,10 +54,11 @@ function App() {
           <Route path="/*" element={<ProtectedRoutes toggleDarkMode={toggleDarkMode} />} />
         </Routes>
       </div>
-    </UserProvider>
     </MarketplaceProvider>
     </FuntimeProvider>
     </EventProvider>
+    </StudentProvider>
+    </UserProvider>
    
     </BrowserRouter>
   );
@@ -89,11 +88,6 @@ function ProtectedRoutes() {
         <Route path="addevent" element={<AddEvent />} />
         <Route path="addfuntime" element={<AddFunTime />} />
         <Route path="updateprofile" element={<UpdateProfile />} />
-        <Route path="marketplace/tech" element={<TechMarketplacePage/>} />
-        <Route path="marketplace/food" element={<FoodMarketplacePage/>} />
-        <Route path="marketplace/accessories" element={<AccessoriesMarketplacePage/>} />
-        <Route path="marketplace/clothing" element={<ClothingMarketplacePage/>} />
-        <Route path="marketplace/art" element={<ArtMarketplacePage/>} />
         <Route path="myprofile/myevents" element={<MyEventsPage/>} />
         <Route path="myprofile/myproducts" element={<MyProductsPage/>} />
         <Route path="myprofile/myfuntimes" element={<MyFuntimesPage/>} />

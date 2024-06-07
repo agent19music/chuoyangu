@@ -2,45 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../context/UserContext';
 import SideMenu from '../components/SideMenu';
-import { MarketplaceContext } from '../context/MarketplaceContext';
-
+import { StudentContext } from '../context/StudentContext';
 export default function StudentsPage() {
-  const [students, setStudents] = useState([]);
-  const [filteredStudents, setFilteredStudents] = useState([]);
-  const [category, setCategory] = useState('Software Engineering'); // Default category
-
-
-  // const [selectedCourse, setSelectedCourse] = useState('');
-  const { apiEndpoint } = useContext(UserContext);
-
-  // const courses = ['UI/UX', 'Data Science', 'Software Dev', 'Cybersec']; // Updated course names
-
-   // Fetch data when component mounts
-
-   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${apiEndpoint}/users`);
-        setStudents(response.data.users);
-        // console.log(students); // Update state with fetched users data
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-  
-    fetchData();
-  }, [apiEndpoint]);
-
-  useEffect(() => {
-    if (category) {
-      const filtered = students.filter(student => student.category === category);
-      setFilteredStudents(filtered);
-    } else {
-      setFilteredStudents(students);
-    }
-  }, [category, students]);
-  
-
+ 
+const {students, setCategory} = useContext(StudentContext)
+ 
  
 
   return (
