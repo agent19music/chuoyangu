@@ -1,9 +1,7 @@
 import React, { useContext } from 'react';
 import '../App.css';
-import Swal from 'sweetalert2';
 import PropTypes from 'prop-types';
 import { MarketplaceContext } from '../context/MarketplaceContext';
-import { Link } from 'react-router-dom';
 import Review from './Review';
 
 const Product = () => {
@@ -23,7 +21,7 @@ const Product = () => {
   );
 };
 
-const ProductCard = ({ title, description, average_rating, image_url, id, contact_info, price, handleDeleteProduct }) => {
+const ProductCard = ({ title, description, average_rating, image_url, id, contact_info, price }) => {
   return (
     <div className="card my-4">
       <div className="row no-gutters">
@@ -58,16 +56,6 @@ const ProductCard = ({ title, description, average_rating, image_url, id, contac
             </div>
           </div>
         </div>
-      </div>
-      <div className='extra content'>
-        <Link to={`/updateproduct/${id}`}>
-          <button className="ui icon blue button">
-            <i className="edit icon"></i>
-          </button>
-        </Link>
-        <button className="ui icon red button" onClick={() => handleDeleteProduct(id)}>
-          <i className="trash icon"></i>
-        </button>
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ const {students, setCategory} = useContext(StudentContext)
               <button to="/users/category/software_dev"  onClick={() => setCategory('Software Engineering')}className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2" aria-current="true">
               <i className="far fa-face-laugh-beam fa-fw me-3"></i><span>SoftwareDev</span>
             </button>
-            <button to="/users/category/cybersec"  onClick={() => setCategory('Cybersecurity')}className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
+            <button to="/users/category/cybersec"  onClick={() => setCategory('Cybersec')}className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
               <i className="fas fa-calendar-days fa-fw me-3"></i><span>CyberSec</span>
             </button>
             <button to="/users/category/data_science"  onClick={() => setCategory('Data Science')} className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
@@ -61,7 +61,6 @@ const {students, setCategory} = useContext(StudentContext)
             <div key={student.id} className="col-md-6 mb-3">
               <div className="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                 <div className="col p-4 d-flex flex-column position-static">
-                  <strong className="d-inline-block mb-2 text-primary">ID: {student.id}</strong>
                   <h3 className="mb-0">{student.username}</h3>
                   <div className="mb-1 text-muted">Course: {student.category}</div>
                 </div>

@@ -247,14 +247,19 @@ def toggle_like_fun_time(fun_time_id):
     if existing_like:
         # Unlike if already liked
         db.session.delete(existing_like)
-        db.session.commit()
-        return jsonify({'message': 'Fun-Time unliked successfully'})
+        message = 'Fun-Time unliked successfully'
     else:
         # Like if not already liked
         new_like = Likes(user_id=current_user, fun_time_id=fun_time_id)
         db.session.add(new_like)
-        db.session.commit()
-        return jsonify({'message': 'Fun-Time liked successfully'})
+        message = 'Fun-Time liked successfully'
+    
+    db.session.commit()
+    
+    # Return the updated like count
+    like_count = Likes.query.filter_by(fun_time_id=fun_time_id).count()
+    return jsonify({'message': message, 'like_count': like_count})
+
 
 def get_fun_times_by_category(category):
     fun_times = Fun_times.query.filter_by(category=category).all()

@@ -102,8 +102,8 @@ export default function AddFunTime() {
                 onChange={(e) => setCategory(e.target.value)}
               >
                 <option value="">Select Category</option>
-                <option value="Funny">Fun</option>
-                <option value="Events">Social</option>
+                <option value="Funny">Funny</option>
+                <option value="Events">Events</option>
                 <option value="Educational">Educational</option>
               </select>
               <label htmlFor="category" className="text-muted">

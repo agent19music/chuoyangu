@@ -18,14 +18,14 @@ export default function Funtime() {
           Authorization: `Bearer ${authToken && authToken}`,
         },
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to toggle like');
       }
-
+  
       const data = await response.json();
       console.log(data);
-
+  
       setFuntimes((prevFuntimes) => {
         return prevFuntimes.map((funTime) => {
           if (funTime.funtimeId === funtimeId) {
@@ -46,10 +46,7 @@ export default function Funtime() {
       });
     }
   };
-
-  useEffect(() => {
-    console.log('liked');
-  }, [funtimes]);
+  
 
   function handleSubmit(e, funtimeId, localCommentText) {
     e.preventDefault();
@@ -95,19 +92,21 @@ export default function Funtime() {
     <div id='event-holder' className="bg-light overflow-auto">
       <h4>FUNTIMES</h4>
       <div className="mx-auto">
-        {funtimes && funtimes.map((funtime, index) => (
-          <FuntimeCard
-            key={index}
-            index={index}
-            {...funtime}
-            funtimeId={funtime.funtimeId}
-            userId={currentUser.id}
-            handleLike={handleLike}
-            handleSubmit={handleSubmit}
-            user_image={funtime.user.image}
-            username={funtime.user.username}
-          />
-        ))}
+      {funtimes && funtimes.map((funtime, index) => (
+      <FuntimeCard
+        key={index}
+        index={index}
+        {...funtime}
+        funtimeId={funtime.funtimeId}
+        userId={currentUser.id}
+        handleLike={handleLike}
+        handleSubmit={handleSubmit}
+        user_image={funtime.user.image}
+        username={funtime.user.username}
+        liked={funtime.liked}
+      />
+    ))}
+
       </div>
     </div>
   );
@@ -126,6 +125,7 @@ const FuntimeCard = ({
   handleLike,
   handleSubmit,
   funtimeId,
+  liked, // Add liked prop
 }) => {
   const [localCommentText, setLocalCommentText] = useState('');
 
@@ -134,7 +134,7 @@ const FuntimeCard = ({
       <div className="row no-gutters">
         <div className="col-md-4">
           <div className="d-flex align-items-center">
-          {user_image ? (
+            {user_image ? (
               <img src={`data:image/jpeg;base64,${user_image}`} alt="" className="rounded-circle m-3" style={{ width: '3rem', height: '3rem' }} />
             ) : (
               <img src={'/default-pfp.jpg'} alt="" className="rounded-circle m-3" style={{ width: '3rem', height: '3rem' }} />
@@ -149,7 +149,7 @@ const FuntimeCard = ({
             <h5 className="h3 font-weight-bold">{description}</h5>
             <div className="d-flex justify-content-between align-items-center mt-2">
               <span className="text-muted">
-                <i className="far fa-heart" onClick={() => handleLike(funtimeId)} style={{ cursor: 'pointer' }}></i> Likes: {total_likes}
+                <i className={liked ? "fas fa-heart" : "far fa-heart"} onClick={() => handleLike(funtimeId)} style={{ cursor: 'pointer' }}></i> Likes: {total_likes}
               </span>
               <span className="text-muted">
                 <i className="fas fa-list"></i> Category: {category}
@@ -202,6 +202,7 @@ const FuntimeCard = ({
     </div>
   );
 };
+
 
 FuntimeCard.propTypes = {
   index: PropTypes.number.isRequired,
