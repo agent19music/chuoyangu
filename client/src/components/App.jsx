@@ -16,10 +16,6 @@ import AddEvent from '../pages/AddEvent'
 import UserProvider, { UserContext } from '../context/UserContext';
 import UpdateProfile from '../pages/UpdateProfile';
 import MyEventsPage from '../pages/MyEventsPage';
-import StudentsDataScience from '../pages/StudentsDataScience';
-import StudentsSoftware from '../pages/StudentsSoftware';
-import StudentsCyberSec from '../pages/StudentsCyberSec';
-import StudentsUiUx from '../pages/StudentsUiUx';
 import UpdateProduct from '../pages/UpdateProduct';
 import UpdateEvent from '../pages/UpdateEvent';
 import MyFuntimesPage from '../pages/MyFuntimesPage';
@@ -92,10 +88,7 @@ function ProtectedRoutes() {
         <Route path="myprofile/myproducts" element={<MyProductsPage/>} />
         <Route path="myprofile/myfuntimes" element={<MyFuntimesPage/>} />
         <Route path="updateevent/:eventId" element={<UpdateEvent/>} />
-        <Route path="users/category/software_dev" element={<StudentsSoftware/>} />
-        <Route path="users/category/data_science" element={<StudentsDataScience/>} />
-        <Route path="users/category/cybersec" element={<StudentsCyberSec/>} />
-        <Route path="users/category/ui_ux" element={<StudentsUiUx/>} />
+       
        
         <Route path="updatefuntime/:funtimeId" element={<UpdateFuntime/>} />
 
