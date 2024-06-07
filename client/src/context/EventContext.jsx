@@ -1,51 +1,59 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useEffect, useState } from "react";
+import PropTypes from 'prop-types';
 
 export const EventContext = createContext();
 
-const EventProvider = ({ children }) => {
+export default function EventProvider({ children }) {
+  const apiEndpoint = "http://127.0.0.1:5000";
+  const [isLoading, setIsLoading] = useState(false);
   const [events, setEvents] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [onChange, setOnchange] = useState(false);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [onchange, setOnchange] = useState(false);
+  const [category, setCategory] = useState('Fun'); // Default category
 
-  const apiEndpoint = 'http://127.0.0.1:5000'; // Replace this with your actual API endpoint
-
-  const fetchAllEvents = useCallback(() => {
+  useEffect(() => {
     setIsLoading(true);
     fetch(`${apiEndpoint}/events`)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         setEvents(data);
+        setFilteredEvents(data); // Initially set filteredEvents to all events
         setIsLoading(false);
       })
-      .catch(err => {
-        console.error(err);
-        setIsLoading(false);
-      });
-  }, [apiEndpoint]);
-
-  const fetchEventsByCategory = useCallback((category) => {
-    setIsLoading(true);
-    fetch(`${apiEndpoint}/${category}`)
-      .then(res => res.json())
-      .then(data => {
-        setEvents(data);
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+        setEvents([]);
+        setFilteredEvents([]);
         setIsLoading(false);
       });
   }, [apiEndpoint]);
 
   useEffect(() => {
-    fetchAllEvents();
-  }, [fetchAllEvents, onChange]);
+    if (category) {
+      const filtered = events.filter(event => event.category === category);
+      setFilteredEvents(filtered);
+    } else {
+      setFilteredEvents(events);
+    }
+  }, [category, events]);
+
+  const contextData = {
+    events: filteredEvents,
+    setCategory,
+    isLoading,
+    onchange,
+    setOnchange,
+  };
+
+  console.log(events);
 
   return (
-    <EventContext.Provider value={{ events, isLoading, setOnchange, fetchAllEvents, fetchEventsByCategory }}>
+    <EventContext.Provider value={contextData}>
       {children}
     </EventContext.Provider>
   );
-};
+}
 
-export default EventProvider;
+EventProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
