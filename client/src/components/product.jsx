@@ -21,7 +21,7 @@ const Product = () => {
   );
 };
 
-const ProductCard = ({ title, description, average_rating, image_url, id, contact_info, price, handleDeleteProduct }) => {
+const ProductCard = ({ title, description, average_rating, image_url, id, contact_info, price }) => {
   return (
     <div className="card my-4">
       <div className="row no-gutters">
