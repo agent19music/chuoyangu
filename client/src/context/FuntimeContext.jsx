@@ -9,6 +9,10 @@ export default function FuntimeProvider({children}){
     const [isLoading, setIsLoading] = useState(false);
     const [onchange, setOnchange] = useState(false);
     const [funtimes, setFuntimes] = useState([]);
+    const [category, setCategory] = useState('Fun'); // Default category
+    const [filteredEvents, setFilteredEvents] = useState([]);
+
+
 
 
     useEffect(() => {
@@ -25,6 +29,18 @@ export default function FuntimeProvider({children}){
             setIsLoading(false);
           });
       }, [onchange, apiEndpoint]);
+
+      useEffect(() => {
+        if (category) {
+          const filtered = funtimes.filter(funtime => funtime.category === category);
+          setFilteredEvents(filtered);
+        } else {
+          setFilteredEvents(funtimes);
+        }
+      }, [category, funtimes]);
+    
+    
+    
    
 
 
@@ -32,7 +48,7 @@ export default function FuntimeProvider({children}){
 
     const contextData = {
       
-         funtimes,
+         funtimes: filteredEvents,
          setOnchange,
          setFuntimes,
          isLoading
