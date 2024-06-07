@@ -1,4 +1,4 @@
-import { createContext, useState,useEffect} from "react";
+import { React, createContext, useState,useEffect} from "react";
 import PropTypes from 'prop-types'; // Add this line
 
 export const MarketplaceContext = createContext();
@@ -8,11 +8,15 @@ export default function MarketplaceProvider({children}){
     const apiEndpoint = "http://127.0.0.1:5000"
     const [products, setProducts] = useState([])
     const [isLoading, setIsLoading] = useState(true);
+    const [filteredProducts, setFilteredProducts] = useState([])
+    const [category, setCategory] = useState('Food'); // Default category
+
+
 
 
     useEffect(() => {
         setIsLoading(true); // Ensure loading state is true before fetching
-        fetch(`${apiEndpoint}`)
+        fetch(`${apiEndpoint}/marketplace`)
             .then((res) => res.json())
             .then((res) => {
                 setProducts(res);
@@ -25,13 +29,24 @@ export default function MarketplaceProvider({children}){
             });
     }, []);
 
+    useEffect(() => {
+        if (category) {
+          const filtered = products.filter(product => product.category === category);
+          setFilteredProducts(filtered);
+        } else {
+          setFilteredProducts(products);
+        }
+      }, [category, products]);
+
     const contextData = {
        apiEndpoint,
-       products,
-       isLoading
+       products: filteredProducts,
+       isLoading,
+       setCategory
          
     };
-    
+
+    console.log(products);
     
         return (
             <MarketplaceContext.Provider value={contextData}>

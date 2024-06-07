@@ -27,13 +27,10 @@ import StudentsCyberSec from '../pages/StudentsCyberSec';
 import StudentsUiUx from '../pages/StudentsUiUx';
 import UpdateProduct from '../pages/UpdateProduct';
 import UpdateEvent from '../pages/UpdateEvent';
-import FunnyFuntimesPage from '../pages/FunnyFuntimesPage';
-import EventFuntimesPage from '../pages/EventFuntimesPage';
 import MyFuntimesPage from '../pages/MyFuntimesPage';
 import AddFunTime from '../pages/AddFuntimes';
 import MyProductsPage from '../pages/MyProductsPage';
 import UpdateFuntime from '../pages/UpdateFuntimes';
-import EducationalFuntimesPage from '../pages/EducationalFuntimesPages';
 import MarketplaceProvider from '../context/MarketplaceContext';
 import FuntimeProvider from '../context/FuntimeContext';
 import EventProvider from '../context/EventContext';
@@ -105,9 +102,7 @@ function ProtectedRoutes() {
         <Route path="users/category/data_science" element={<StudentsDataScience/>} />
         <Route path="users/category/cybersec" element={<StudentsCyberSec/>} />
         <Route path="users/category/ui_ux" element={<StudentsUiUx/>} />
-        <Route path="funtimes/funny" element={<FunnyFuntimesPage/>} />
-        <Route path="funtimes/events" element={<EventFuntimesPage/>} />
-        <Route path="funtimes/educational" element={<EducationalFuntimesPage/>} />
+       
         <Route path="updatefuntime/:funtimeId" element={<UpdateFuntime/>} />
 
       </Routes>

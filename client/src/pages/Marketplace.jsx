@@ -1,10 +1,12 @@
-import React from 'react';
+import {React, useContext} from 'react';
 import '../App.css'
 import Product from '../components/product';
 import SideMenu from '../components/SideMenu';
-import { Link } from 'react-router-dom';
+import { MarketplaceContext } from '../context/MarketplaceContext';
 
 const Marketplace = () => {
+  const {setCategory} = useContext(MarketplaceContext)
+
   
   return (
     <div className="d-flex flex-column flex-md-row align-items-start justify-content-between h-100 ">      
@@ -13,21 +15,21 @@ const Marketplace = () => {
       <div className="position-sticky">
         <div id="sidebarMenu"className="list-group list-group-flush mx-3 mt-4">
           {/* sidenav links here */}
-          <Link to="/marketplace/food" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2" aria-current="true">
+          <button to="/marketplace/food"  onClick={() => setCategory('Food')}  className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2" aria-current="true">
           <i className="fas fa-pizza-slice fa-fw me-3"></i><span>Food</span>
-          </Link>
-          <Link to="/marketplace/tech" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
+          </button>
+          <button to="/marketplace/tech"  onClick={() => setCategory('Tech')}  className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
           <i className="fas fa-laptop-code fa-fw me-3"></i><span >Tech</span>
-          </Link>
-          <Link to="/marketplace/accessories" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
+          </button>
+          <button to="/marketplace/accessories"  onClick={() => setCategory('Accessories')} className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
           <i className="fas fa-ring fa-fw me-3"></i><span>Accessories</span>
-          </Link>
-          <Link to="/marketplace/clothing" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
+          </button>
+          <button to="/marketplace/clothing"  onClick={() => setCategory('Clothing')} className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
             <i className="fas fa-shirt fa-fw me-3"></i><span>Clothing</span>
-          </Link>
-          <Link to="/marketplace/art" className="list-group-item list-group-item-action py-2 ripple text-dark link-style mb-2">
+          </button>
+          <button to="/marketplace/art"  onClick={() => setCategory('Art')} className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
             <i className="fas fa-palette fa-fw me-3"></i><span>Art</span>
-          </Link>
+          </button>
         </div>
       </div>
     </nav>
