@@ -9,7 +9,7 @@ const EventsPage = () => {
   return (
     <div className="d-flex flex-column flex-md-row align-items-start justify-content-between h-100">
       <div id='left-sidemenu' className="order-3 order-md-1 col-12 col-md-2 p-3 shadow-sm h-100 d-flex flex-column mt-5">
-        <nav className="collapse d-lg-block sidebar collapse h-50 overflow-auto">
+        <nav className="nav nav-pills flex-column">
           <div className="position-sticky">
             <div id="sidebarMenu" className="list-group list-group-flush mx-3 mt-4">
               <button 
@@ -62,11 +62,14 @@ const EventsPage = () => {
         </div>
       </div>
 
-      <div id='middle' className="order-1 order-md-2 col-12 col-md-8 mx-2 p-3 shadow-sm">
-        <Event/>
+      <div id='middle' className="order-1 order-md-2 col-12 col-md-8 px-3 pt-3">
+        <div id='event-holder' className="event-container d-flex flex-column align-items-center">
+          <Event />
+        </div>
       </div>
 
-      <div id='right-sidemenu' className="order-2 order-md-3 col-12 col-md-2 mx-2 p-3 shadow-sm mt-3">
+      <div id='right-sidemenu' className="order-2 order-md-3 col-12 col-md-2 p-3 shadow-sm h-100 mt-5">
+      <div className="d-flex flex-column">
         <h4>Top Event</h4>
         <img src='https://blog.lyricallemonade.com/wp-content/uploads/2022/04/IMG_5074-scaled-1.jpg' alt='img' className='img-fluid'/>
         <h5>Description</h5>
@@ -80,6 +83,7 @@ const EventsPage = () => {
       </div>
       <div className='sidebar-btn'>
         <SideMenu mode='event'/>
+      </div>
       </div>
     </div>
   );
