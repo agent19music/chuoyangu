@@ -41,7 +41,6 @@ const {students, setCategory} = useContext(StudentContext)
         </nav>  
         <div className="mt-auto d-flex flex-column align-items-center justify-content-center">
           <h4>About</h4>
-          <h3>Students Page</h3>
           <p>
             The student page provides a user-friendly interface for students to access resources and communicate with their fellow peers. Through features like funtimes and comment section, it fosters effective interaction and engagement between students and educators within the learning environment.
           </p>
@@ -55,7 +54,7 @@ const {students, setCategory} = useContext(StudentContext)
 
       {/* Middle section (50%) */}
       <div id='middle' className="order-1 order-md-2 col-12 col-md-8 mx-2 p-3 shadow-sm">
-        <h3>Students</h3>
+        <h4 className='page-title'>STUDENTS</h4>
         <div className="row">
           {students.map(student => (
             <div key={student.id} className="col-md-6 mb-3">

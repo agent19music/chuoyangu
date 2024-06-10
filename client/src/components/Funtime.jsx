@@ -90,7 +90,7 @@ export default function Funtime() {
 
   return (
     <div id='event-holder' className="bg-light overflow-auto">
-      <h4>FUNTIMES</h4>
+      <h4 className='page-title'>FUNTIMES</h4>
       <div className="mx-auto">
       {funtimes && funtimes.map((funtime, index) => (
       <FuntimeCard
