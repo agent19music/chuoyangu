@@ -9,6 +9,7 @@ export default function StudentProvider({children}){
     const apiEndpoint = "http://127.0.0.1:5000"
     const [students, setStudents] = useState([])
     const [isLoading, setIsLoading] = useState(true);
+    const [onchange, setOnchange] = useState(false);
     const [filteredStudents, setFilteredStudents] = useState([])
     const [category, setCategory] = useState('Software Engineering'); // Default category
 
@@ -27,7 +28,7 @@ export default function StudentProvider({children}){
         };
       
         fetchData();
-      }, [apiEndpoint]);
+      }, [apiEndpoint,onchange]);
 
     useEffect(() => {
         if (category) {

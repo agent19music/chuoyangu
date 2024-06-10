@@ -55,7 +55,7 @@ const Event = () => {
 
   return (
     <div id='event-holder' className="bg-light overflow-auto">
-      <h4>EVENTS</h4>
+      <h4 className='page-title'>EVENTS</h4>
       <div className="mx-auto">
         {events && events.map((event, index) => (
           <EventCard key={index} {...event} handleSubmit={handleSubmit} />

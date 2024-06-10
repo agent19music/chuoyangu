@@ -344,3 +344,7 @@ input:-webkit-autofill:active  {
   color: green;
   margin-right: 25px;
 }
+
+.page-title{
+  margin-left: 30vw;
+}

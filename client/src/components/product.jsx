@@ -11,7 +11,7 @@ const Product = () => {
 
   return (
     <div id='event-holder' className="bg-light overflow-auto">
-      <h4>MARKETPLACE</h4>
+      <h4 className='page-title'>MARKETPLACE</h4>
       <div className="mx-auto">
         {products.map((product, index) => (
           <ProductCard key={index} {...product} />
