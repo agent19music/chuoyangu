@@ -26,7 +26,7 @@ export default function EventProvider({ children }) {
         setFilteredEvents([]);
         setIsLoading(false);
       });
-  }, [apiEndpoint]);
+  }, [apiEndpoint, onchange]);
 
   useEffect(() => {
     if (category) {

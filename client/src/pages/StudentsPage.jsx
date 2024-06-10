@@ -25,7 +25,7 @@ const {students, setCategory} = useContext(StudentContext)
             <button to="/users/category/data_science"  onClick={() => setCategory('Data Science')} className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
               <i className="fas fa-book-open fa-fw me-3"></i><span>DataScience</span>
             </button>
-            <button to="/users/category/ui_ux"  onClick={() => setCategory('UI UX')} className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
+            <button to="/users/category/ui_ux"  onClick={() => setCategory('UI/UX')} className="list-group-item list-group-item-action py-2 ripple text-dark button-style mb-2">
               <i className="fas fa-fire fa-fw me-3"></i><span>UI_UX</span>
             </button>
               </>

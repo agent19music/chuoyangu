@@ -28,7 +28,7 @@ export default function FuntimeProvider({children}){
             console.error('Error fetching data:', error);
             setIsLoading(false);
           });
-      }, [onchange, apiEndpoint]);
+      }, [onchange, apiEndpoint, onchange]);
 
       useEffect(() => {
         if (category) {
